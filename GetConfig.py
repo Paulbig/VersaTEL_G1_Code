@@ -6,7 +6,8 @@ try:
 except Exception:
     import ConfigParser as cp
 
-name_of_config_file = 'Config.ini'
+name_of_config_file = 'config.ini'
+name_of_sys_config_file = 'sys_cfg.ini'
 
 
 def read_config_file():
@@ -14,59 +15,10 @@ def read_config_file():
     objCFG.read(name_of_config_file)
     return objCFG
 
-
-# FolderSetting
-collection = 'collections'
-swporterr = 'SWPorterr'
-trace = 'Trace'
-traceanalyse = 'TraceAnalyse'
-cfgbackup = 'CFGBackup'
-PeriodicCheck = 'PeriodicCheck'
-
-# MessageLogging
-msglevel = '1'
-
-# PCEngineCommand
-PCEngineCommand_list = ['vpd',
-                        'conmgr status',
-                        'mirror',
-                        'group',
-                        'map',
-                        'drvstate',
-                        'history',
-                        'sfp all']
-
-# PCSANSwitchCommand
-PCSANSwitchCommand_list = ['ipaddrshow',
-                           'switchstatusshow',
-                           'switchshow',
-                           'porterrshow',
-                           'nsshow',
-                           'zoneshow',
-                           'cfgshow']
-
-# TraceRegular
-TraceRegular2 = [['abts_received',
-                      "r'(.*)- Port (A1|A2) reports (ABTS received):\s.*(initiator #)(\d+).*(0x.{6})\s?'"],
-                 ['abts_frame',
-                     "r'(.*)(P0|P1|P2|P3):   (ABTS frame received from port ID )(0x.{6})\s(.*(Initiator number)=(\d+)\s?)?(\s.*)?'"],
-                 ['queuefull',
-                     "r'(.*)(- Port )(A1|A2)(.*Queue Fulls:\s.*initiator #)(\d+)(.*)(0x.{6})\s?'"],
-                 ['linkerror',
-                     "r'(.*)(P1|P2|P3|P4): (.*)\((type = )(.*)\)( for our own port)'"],
-                 ['driveblocked',
-                     "r'(.*) RE: (RE-IOCB) (4504), (address) = (.*),.*\s.*(target_number )(0x.{4}).*.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s.*\s(.*)'"],
-                 ['abortcaw',
-                     "r'.*(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (.*) - (Aborted Compare and Write command:)\s.*(Drive )(0x.{4}).*(IOCB #)(\d*), (received )(\d*)(.*\s)(.*)'"],
-                 ['unwanted_hba',
-                     "r'.*(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (.*) - (Port) (A1|A2|B1|B2) (reports initiator arrived:)\s.*(Unwanted initiator at Port ID) (0x.{6}), (WWPN) = (.{16})'"],
-                 ['link_error',
-                     "r'(\d{2}:\d{2}\.\d{3}\_\d{3}) (P0|P1|P2|P3): (Link error)(.*)'"],
-                 ['from_unwant_hba',
-                     "r'(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (.*), (.*) - (Port) (A1|A2|B1|B2) (reports ABTS received):\s.*(From unwanted initiator at Port ID) (.{8})'"],
-                 ['lost_connection',
-                     "r'\s*(\w{3,6}day), (\d{1,2}/\d{1,2}/20\d{1,2}), (\d{1,2}:\d{1,2}:\d{1,2}) - (Port) (A1|A2|B1|B2) (\w+) (\d+) (bytes of) (\w+) (data):\s+(From drive connection) (\d+) = (drive) #(\d+) (at Port ID) (0x\d{6})'"]]
-
+def read_sys_config_file():
+    objCFG = cp.ConfigParser(allow_no_value=True)
+    objCFG.read(name_of_sys_config_file)
+    return objCFG
 
 class EngineConfig(object):
     """docstring for EngineConfig"""
@@ -74,6 +26,7 @@ class EngineConfig(object):
     def __init__(self):
         #        super(EngineConfig, self).__init__()
         self.cfg = read_config_file()
+        self.sys_cfg = read_sys_config_file()
         self.oddEngines = self._odd_engines()
 
     def _odd_engines(self):
@@ -101,23 +54,22 @@ class EngineConfig(object):
         return self.cfg.getint('EngineSetting', 'trace_level')
 
 
-
-
 class DBConfig(object):
     """docstring for DBConfig"""
 
     def __init__(self):
         # super(DBConfig, self).__init__()
         self.cfg = read_config_file()
+        self.sys_cfg = read_sys_config_file()
 
     def host(self):
-        return self.cfg.get('DBSetting', 'host')
+        return self.sys_cfg.get('DBSetting', 'host')
 
     def port(self):
-        return self.cfg.getint('DBSetting', 'port')
+        return self.sys_cfg.getint('DBSetting', 'port')
 
     def name(self):
-        return self.cfg.get('DBSetting', 'name')
+        return  self.sys_cfg.get('DBSetting', 'name')
 
 
 class SwitchConfig(object):
@@ -139,7 +91,7 @@ class SwitchConfig(object):
         for sw in self.cfg.items('SANSwitchePorts'):
             oddSWPort[sw[0]] = eval(sw[1])
         return oddSWPort
-
+   
     def list_switch_alias(self):
         return self.oddSWAlias.keys()
 
@@ -158,6 +110,9 @@ class SwitchConfig(object):
     def password(self):
         return str(self.cfg.get('SANSwitcheSetting', 'password'))
 
+    def sw_enable_status(self):
+        return self.cfg.get('SANSwitcheSetting', 'enable')
+
     def threshold_total(self):
         lstThreshold = []
         # level1 = self.cfg.getint('Threshold', 'SWTotal_increase_Notify')
@@ -167,7 +122,6 @@ class SwitchConfig(object):
         lstThreshold.append(level2)
         lstThreshold.append(level3)
         return tuple(lstThreshold)
-
 
 
 class EmailConfig(object):
@@ -204,9 +158,11 @@ class Setting(object):
 
     def __init__(self):
         self.cfg = read_config_file()
+        self.sys_cfg = read_sys_config_file()
 
     def message_level(self):
-        return msglevel
+# Get the time interval Settings
+        return int(self.sys_cfg.get('MessageLogging', 'msglevel'))
 
     def interval_web_refresh(self):
         return self.cfg.getint('Interval', 'web_refresh')
@@ -219,36 +175,50 @@ class Setting(object):
 
     def interval_warning_check(self):
         return self.cfg.getint('Interval', 'warning_check')
+# Get mail cycle Settings
+
+    def cron_cycle(self):
+        return self.cfg.get('Cycle', 'cycle')
+
+    def cron_day(self):
+        return self.cfg.getint('Cycle', 'day')
+
+    def cron_hour(self):
+        return self.cfg.getint('Cycle', 'hour')
+
+    def cron_minutes(self):
+        return self.cfg.getint('Cycle', 'minutes')
 
     def folder_collection(self):
-        return collection
+        return  self.sys_cfg.get('FolderSetting', 'collection')
 
     def folder_swporterr(self):
-        return swporterr
+        return  self.sys_cfg.get('FolderSetting', 'swporterr')
 
     def folder_trace(self):
-        return trace
+        return  self.sys_cfg.get('FolderSetting', 'trace')
 
     def folder_traceanalyse(self):
-        return traceanalyse
+        return  self.sys_cfg.get('FolderSetting', 'traceanalyse')
 
     def folder_cfgbackup(self):
-        return cfgbackup
+        return  self.sys_cfg.get('FolderSetting', 'cfgbackup')
 
     def folder_PeriodicCheck(self):
-        return PeriodicCheck
-
+        return  self.sys_cfg.get('FolderSetting', 'PeriodicCheck')
+   
     def PCEngineCommand(self):
-        return PCEngineCommand_list
+        return list(i[0] for i in self.sys_cfg.items('PCEngineCommand'))
 
     def PCSANSwitchCommand(self):
-        return PCSANSwitchCommand_list
+        return list(i[0] for i in self.sys_cfg.items('PCSANSwitchCommand'))
 
     def oddRegularTrace(self):
         oddRegularTrace = Odd()
-        for i in TraceRegular2:
+        for i in self.sys_cfg.items('TraceRegular'):
             oddRegularTrace[i[0]] = i[1]
         return oddRegularTrace
+
 
 class General(object):
     """docstring for General"""
@@ -259,6 +229,7 @@ class General(object):
     def get_PRODUCT(self):
         return str(self.cfg.get('General', 'PRODUCT'))
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
+    print(Setting().folder_collection())
     pass
