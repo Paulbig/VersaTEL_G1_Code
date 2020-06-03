@@ -18,6 +18,7 @@ email_password = emailcfg.email_password()
 email_receiver = emailcfg.email_receiver()
 email_receiver_list = email_receiver.split(',')
 email_encrypt = emailcfg.email_encrypt()
+email_anonymous = emailcfg.email_anonymous()
 
 def email_switch(func):
     def send(*args):
@@ -34,33 +35,40 @@ def send_email(title, content):
     msg['To'] = ",".join(email_receiver_list)
     context = MIMEText(content, _subtype='html', _charset='utf-8')
     msg.attach(context)
-    try:
-        if email_encrypt == 'ssl':
-            send_smtp = smtplib.SMTP_SSL(email_host, 465)
-            send_smtp.connect(email_host)
-        else:
-            send_smtp = smtplib.SMTP()
-            if email_encrypt == 'tls':
-                send_smtp.connect(email_host, 587)
-                send_smtp.ehlo()
-                send_smtp.starttls()
+    if email_anonymous == 'yes':
+        try:
+            send_smtp = smtplib.SMTP(email_host, email_port)
+        except:
+            print("The Host unable to connect!")
+            return False
+    else:
+        try:
+            if email_encrypt == 'ssl':
+                send_smtp = smtplib.SMTP_SSL(email_host, email_port)
+                send_smtp.connect(email_host)
             else:
-                send_smtp.connect(email_host, email_port)
-                send_smtp.ehlo()
-    except:
-        print("Failed to access smtp server!")
-        return False
+                send_smtp = smtplib.SMTP()
+                if email_encrypt == 'tls':
+                    send_smtp.connect(email_host, email_port)
+                    send_smtp.ehlo()
+                    send_smtp.starttls()
+                else:
+                    send_smtp.connect(email_host, email_port)
+                    send_smtp.ehlo()
+        except:
+            print("Failed to access smtp server!")
+            return False
 
-    try:
-        send_smtp.login(email_sender, email_password)
-    except:
-        print("ID or Password is wrong")
-        return False
+        try:
+            send_smtp.login(email_sender, email_password)
+        except:
+            print("ID or Password is wrong")
+            return False
 
     try:
         send_smtp.sendmail(email_sender, email_receiver_list, msg.as_string())
     except:
-        print("Send Fail, Please check recipient")
+        print("Send Fail, Please check 'receiver'. ")
         return False
 
     send_smtp.close()

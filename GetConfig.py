@@ -152,6 +152,9 @@ class EmailConfig(object):
     def email_encrypt(self):
         return self.cfg.get('EmailSetting', 'encrypt')
 
+    def email_anonymous(self):
+        return self.cfg.get('EmailSetting', 'anonymous')
+
 
 class Setting(object):
     """docstring for Setting"""
