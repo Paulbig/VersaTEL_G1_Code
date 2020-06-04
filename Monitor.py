@@ -74,7 +74,7 @@ def monitor_db_4_thread():
     t3.setDaemon(True)
     t4.setDaemon(True)
     t5.setDaemon(True)
-    
+
     t1.start()
     t2.start()
     t3.start()

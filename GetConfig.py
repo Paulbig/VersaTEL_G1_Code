@@ -15,10 +15,12 @@ def read_config_file():
     objCFG.read(name_of_config_file)
     return objCFG
 
+
 def read_sys_config_file():
     objCFG = cp.ConfigParser(allow_no_value=True)
     objCFG.read(name_of_sys_config_file)
     return objCFG
+
 
 class EngineConfig(object):
     """docstring for EngineConfig"""
@@ -69,7 +71,7 @@ class DBConfig(object):
         return self.sys_cfg.getint('DBSetting', 'port')
 
     def name(self):
-        return  self.sys_cfg.get('DBSetting', 'name')
+        return self.sys_cfg.get('DBSetting', 'name')
 
 
 class SwitchConfig(object):
@@ -91,7 +93,7 @@ class SwitchConfig(object):
         for sw in self.cfg.items('SANSwitchePorts'):
             oddSWPort[sw[0]] = eval(sw[1])
         return oddSWPort
-   
+
     def list_switch_alias(self):
         return self.oddSWAlias.keys()
 
@@ -164,7 +166,7 @@ class Setting(object):
         self.sys_cfg = read_sys_config_file()
 
     def message_level(self):
-# Get the time interval Settings
+        # Get the time interval Settings
         return int(self.sys_cfg.get('MessageLogging', 'msglevel'))
 
     def interval_web_refresh(self):
@@ -193,23 +195,23 @@ class Setting(object):
         return self.cfg.getint('Cycle', 'minutes')
 
     def folder_collection(self):
-        return  self.sys_cfg.get('FolderSetting', 'collection')
+        return self.sys_cfg.get('FolderSetting', 'collection')
 
     def folder_swporterr(self):
-        return  self.sys_cfg.get('FolderSetting', 'swporterr')
+        return self.sys_cfg.get('FolderSetting', 'swporterr')
 
     def folder_trace(self):
-        return  self.sys_cfg.get('FolderSetting', 'trace')
+        return self.sys_cfg.get('FolderSetting', 'trace')
 
     def folder_traceanalyse(self):
-        return  self.sys_cfg.get('FolderSetting', 'traceanalyse')
+        return self.sys_cfg.get('FolderSetting', 'traceanalyse')
 
     def folder_cfgbackup(self):
-        return  self.sys_cfg.get('FolderSetting', 'cfgbackup')
+        return self.sys_cfg.get('FolderSetting', 'cfgbackup')
 
     def folder_PeriodicCheck(self):
-        return  self.sys_cfg.get('FolderSetting', 'PeriodicCheck')
-   
+        return self.sys_cfg.get('FolderSetting', 'PeriodicCheck')
+
     def PCEngineCommand(self):
         return list(i[0] for i in self.sys_cfg.items('PCEngineCommand'))
 
