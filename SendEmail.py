@@ -138,21 +138,24 @@ def send_warnmail(warninfo_email):
         </body>
         </html> """
     title = "ClusterIO System Status Alert"
-    send_email(title, content)
+    email = Email()
+    email.send_email(title, content)
 
 
 @email_switch
 def send_test():
     title = "This is a HA-AP test email"
     content = "Test"
-    send_email(title, content)
+    email = Email()
+    email.send_email(title, content)
 
 
 @email_switch
 def send_live():
     title = "HA-AP Timing alarm clock"
     content = "I'm still alive"
-    send_email(title, content)
+    email = Email()
+    email.send_email(title, content)
 
 
 if __name__ == '__main__':
