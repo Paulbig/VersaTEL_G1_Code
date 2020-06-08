@@ -129,6 +129,9 @@ class EmailConfig(object):
 
     def __init__(self):
         self.cfg = read_config_file()
+        
+    def email_all(self):
+        return self.cfg.items('EmailSetting')
 
     def email_host(self):
         return str(self.cfg.get('EmailSetting', 'host'))
@@ -159,6 +162,7 @@ class Setting(object):
     def __init__(self):
         self.cfg = read_config_file()
         self.sys_cfg = read_sys_config_file()
+
 
     def message_level(self):
 # Get the time interval Settings
@@ -231,5 +235,13 @@ class General(object):
 
 
 if __name__ == '__main__':
-    print(Setting().folder_collection())
+    #read_config_file().set("EngineSetting","trace_level","3")
+    #####
+#     ww = cp.ConfigParser(allow_no_value=True)
+#     ww.read(name_of_config_file)
+#     ww.set("EngineSetting","trace_level","3")
+#     o = open("config.ini","w+")
+#     ww.write(o)
+#     o.close()
+    print(ww.items("EngineSetting"))
     pass

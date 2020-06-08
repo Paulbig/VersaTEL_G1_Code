@@ -1,7 +1,7 @@
 # coding:utf-8
 from __future__ import print_function
 import time
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,make_response,jsonify
 from gevent.pywsgi import WSGIServer
 from threading import Thread
 import time
@@ -95,6 +95,8 @@ def monitor_db_4_thread():
         stopping_web(3)
 
 
+
+
 def start_web(mode):
     '''
 tlu = Time Last Update
@@ -174,7 +176,24 @@ tlu = Time Last Update
         lstWarningList = db.get_unconfirm_warning()
         return render_template("warning.html", lstWarningList=lstWarningList,
                                )
-
+    
+    
+    
+    @app.route("/config")
+    def config():
+        return render_template("config.html")
+    
+    def data(datadict):
+        response = make_response(jsonify(datadict))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+        return response
+        
+    @app.route("/config/data")
+    def config_data():
+        return data(gc.EmailConfig().email_all())
+    
     @app.route("/send_email", methods=['GET', 'POST'])
     def send_emails():
         if request.args.get('ey'):
@@ -185,11 +204,11 @@ tlu = Time Last Update
         else:
             pass
 
+   # WSGIServer(('0.0.0.0', 5000), app).serve_forever()
     # FLASK_APP = myapp.py
     # FLASK_ENV = development
-    WSGIServer(('0.0.0.0', 5000), app).serve_forever()
     # FLASK_ENV=development
-    # app.run(debug=False, use_reloader=False, host='127.0.0.1', port=5000)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
 
 
 def stopping_web(intSec):
