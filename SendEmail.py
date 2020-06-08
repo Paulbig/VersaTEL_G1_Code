@@ -21,24 +21,18 @@ email_encrypt = emailcfg.email_encrypt()
 email_anonymous = emailcfg.email_anonymous()
 
 
-def email_switch(func):
-    def send(*args):
-        if email_enable == 'yes':
-            return func(*args)
-        else:
-            print("The Email swich is off.")
-    return send
+class Email():
 
+    def get_msg(self, title, content):
+        msg = MIMEMultipart()
+        msg['Subject'] = title
+        msg['From'] = email_sender
+        msg['To'] = ",".join(email_receiver_list)
+        context = MIMEText(content, _subtype='html', _charset='utf-8')
+        msg.attach(context)
+        return msg
 
-def send_email(title, content):
-    msg = MIMEMultipart()
-    msg['Subject'] = title
-    msg['From'] = email_sender
-    msg['To'] = ",".join(email_receiver_list)
-    context = MIMEText(content, _subtype='html', _charset='utf-8')
-    msg.attach(context)
-
-    def connect():
+    def prepare(self):
         try:
             if email_encrypt == 'ssl':
                 send_smtp = smtplib.SMTP_SSL(email_host, email_port)
@@ -62,7 +56,7 @@ def send_email(title, content):
             return False
         return send_smtp
 
-    def anonymous_connect():
+    def anonymous_prepare(self):
         try:
             if email_encrypt == 'ssl':
                 send_smtp = smtplib.SMTP_SSL(email_host, email_port)
@@ -73,23 +67,32 @@ def send_email(title, content):
             print("The Host unable to connect!")
             return False
 
-    if email_anonymous == 'yes':
-        send_smtp = anonymous_connect()
-    else:
-        send_smtp = connect()
-    if send_smtp:
-        try:
-            send_smtp.sendmail(
-                email_sender, email_receiver_list, msg.as_string())
-        except:
-            print("Send Fail, Please check 'receiver'.")
-            return False
-    else:
-        return False
+    def send_email(self, title, content):
+        if email_anonymous == 'yes':
+            send_smtp = self.anonymous_prepare()
+        else:
+            send_smtp = self.prepare()
+        if send_smtp:
+            try:
+                msg = self.get_msg(title, content)
+                send_smtp.sendmail(
+                    email_sender, email_receiver_list, msg.as_string())
+            except:
+                print("Send Fail, Please check 'receiver'.")
+                return
+        else:
+            return
+        send_smtp.close()
+        print("Send success!")
 
-    send_smtp.close()
-    print("Send success!")
-    return True
+
+def email_switch(func):
+    def send(*args):
+        if email_enable == 'yes':
+            return func(*args)
+        else:
+            print("The Email swich is off.")
+    return send
 
 
 @email_switch
