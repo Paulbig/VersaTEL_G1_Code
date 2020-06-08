@@ -8,7 +8,7 @@ try:
 except Exception:
     import ConfigParser as cp
 
-#read config
+# read config
 emailcfg = gc.EmailConfig()
 email_enable = emailcfg.email_enable()
 email_host = emailcfg.email_host()
@@ -18,6 +18,73 @@ email_password = emailcfg.email_password()
 email_receiver = emailcfg.email_receiver()
 email_receiver_list = email_receiver.split(',')
 email_encrypt = emailcfg.email_encrypt()
+email_anonymous = emailcfg.email_anonymous()
+
+
+class Email():
+
+    def get_msg(self, title, content):
+        msg = MIMEMultipart()
+        msg['Subject'] = title
+        msg['From'] = email_sender
+        msg['To'] = ",".join(email_receiver_list)
+        context = MIMEText(content, _subtype='html', _charset='utf-8')
+        msg.attach(context)
+        return msg
+
+    def prepare(self):
+        try:
+            if email_encrypt == 'ssl':
+                send_smtp = smtplib.SMTP_SSL(email_host, email_port)
+                send_smtp.connect(email_host)
+            else:
+                send_smtp = smtplib.SMTP()
+                if email_encrypt == 'tls':
+                    send_smtp.connect(email_host, email_port)
+                    send_smtp.ehlo()
+                    send_smtp.starttls()
+                else:
+                    send_smtp.connect(email_host, email_port)
+                    send_smtp.ehlo()
+        except:
+            print("Failed to connect smtp server!")
+            return False
+        try:
+            send_smtp.login(email_sender, email_password)
+        except:
+            print("ID or Password is wrong")
+            return False
+        return send_smtp
+
+    def anonymous_prepare(self):
+        try:
+            if email_encrypt == 'ssl':
+                send_smtp = smtplib.SMTP_SSL(email_host, email_port)
+            else:
+                send_smtp = smtplib.SMTP(email_host, email_port)
+            return send_smtp
+        except:
+            print("The Host unable to connect!")
+            return False
+
+    def send_email(self, title, content):
+        if email_anonymous == 'yes':
+            send_smtp = self.anonymous_prepare()
+        else:
+            send_smtp = self.prepare()
+        if send_smtp:
+            try:
+                msg = self.get_msg(title, content)
+                send_smtp.sendmail(
+                    email_sender, email_receiver_list, msg.as_string())
+            except:
+                print("Send Fail, Please check 'receiver'.")
+                return
+        else:
+            return
+        send_smtp.close()
+        print("Send success!")
+
 
 def email_switch(func):
     def send(*args):
@@ -27,45 +94,6 @@ def email_switch(func):
             print("The Email swich is off.")
     return send
 
-def send_email(title, content):
-    msg = MIMEMultipart()
-    msg['Subject'] = title
-    msg['From'] = email_sender
-    msg['To'] = ",".join(email_receiver_list)
-    context = MIMEText(content, _subtype='html', _charset='utf-8')
-    msg.attach(context)
-    try:
-        if email_encrypt == 'ssl':
-            send_smtp = smtplib.SMTP_SSL(email_host, 465)
-            send_smtp.connect(email_host)
-        else:
-            send_smtp = smtplib.SMTP()
-            if email_encrypt == 'tls':
-                send_smtp.connect(email_host, 587)
-                send_smtp.ehlo()
-                send_smtp.starttls()
-            else:
-                send_smtp.connect(email_host, email_port)
-                send_smtp.ehlo()
-    except:
-        print("Failed to access smtp server!")
-        return False
-
-    try:
-        send_smtp.login(email_sender, email_password)
-    except:
-        print("ID or Password is wrong")
-        return False
-
-    try:
-        send_smtp.sendmail(email_sender, email_receiver_list, msg.as_string())
-    except:
-        print("Send Fail, Please check recipient")
-        return False
-
-    send_smtp.close()
-    print("Send success!")
-    return True
 
 @email_switch
 def send_warnmail(warninfo_email):
@@ -110,23 +138,27 @@ def send_warnmail(warninfo_email):
         </body>
         </html> """
     title = "ClusterIO System Status Alert"
-    send_email(title, content)
+    email = Email()
+    email.send_email(title, content)
+
 
 @email_switch
 def send_test():
     title = "This is a HA-AP test email"
     content = "Test"
-    send_email(title, content)
+    email = Email()
+    email.send_email(title, content)
+
 
 @email_switch
 def send_live():
     title = "HA-AP Timing alarm clock"
     content = "I'm still alive"
-    send_email(title, content)
+    email = Email()
+    email.send_email(title, content)
 
 
 if __name__ == '__main__':
     send_test()
     # a = [['2020-04-29 16:36:42', '10.203.1.4', 'engine0', 2, 'Engine reboot 6674 secends ago']]
     # send_warnmail(a)
-

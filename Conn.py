@@ -8,6 +8,7 @@ import re
 import Sundry as s
 import GetConfig as gc
 
+
 class FTPConn(object):
     def __init__(self, strIP, intPort, strUser, strPWD, intTO):
         self._host = strIP
@@ -150,8 +151,6 @@ class SSHConn(object):
         except:
             pass
 
-        
-
     # def download(self, remotepath, localpath):
     #     def _download():
     #         if self._sftp is None:
@@ -187,7 +186,6 @@ class SSHConn(object):
         if not self.SSHConnection:
             print('Connect retry for SAN switch "%s" ...' % self._host)
             self._connect()
-
 
     def exctCMD(self, command):
         def GetRusult():
@@ -310,7 +308,8 @@ class HAAPConn(object):
                         return get_result()
                     elif CLI_Conflict in str7Output:
                         self.Connection.write('y')
-                        strConfirmCLI = self.Connection.read_until(CLI, timeout=1)
+                        strConfirmCLI = self.Connection.read_until(
+                            CLI, timeout=1)
                         if CLI in strConfirmCLI:
                             return get_result()
 

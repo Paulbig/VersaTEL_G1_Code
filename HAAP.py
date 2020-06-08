@@ -32,7 +32,7 @@ lstPCCommand = setting.PCEngineCommand()
 def backup_config_all():
     folder = '%s/%s' % (strCFGFolder, s.time_now_folder())
     for ip in list_engines_IP:
-         Action(ip, telnet_port, passwd, FTP_port).backup(folder)
+        Action(ip, telnet_port, passwd, FTP_port).backup(folder)
 
 
 def backup_config(ip):
@@ -151,8 +151,8 @@ def periodically_check(ip):
 #     lstStatus = objEngine.over_all()
 #     intUpTimeSec = objEngine.uptime_second()
 #     return lstStatus, intUpTimeSec
-# 
-# 
+#
+#
 # def list_status_for_realtime_show():
 #     '''
 # [['1.1.1.1',0,'2d','M',0,0,0],['1.1.1.1',0,'2d','M',0,1,2]]
@@ -344,9 +344,9 @@ st
 
         if s.GotoFolder(strBaseFolder):
             for i in range(len(lstDescribe)):
-               
+
                 _get_trace_file(lstCommand[i], lstDescribe[i])
-         
+
                 time.sleep(0.1)
 
     @s.deco_OutFromFolder
@@ -411,7 +411,7 @@ st
         if self._TN_Conn:
             if _exct_cmd():
                 print(
-                    '\nSetting time for engine "%s" completed...' % 
+                    '\nSetting time for engine "%s" completed...' %
                     self._host)
             else:
                 print('\nSetting time for engine "%s" failed!!!' % self._host)
@@ -460,7 +460,7 @@ class Uptime(object):
             return self._uptime_list()
 
     def uptime_second(self):
-        
+
         uptime_list = self.uptime_list()
         time_show = s.time_now_to_show()
         if uptime_list:
@@ -469,7 +469,7 @@ class Uptime(object):
             d = uptime_list[0]
             h = uptime_list[1]
             m = uptime_list[2]
-            # st : second uptime 
+            # st : second uptime
             st = uptime_list[3]
             if d:
                 intSecond += d * 24 * 3600
@@ -612,7 +612,7 @@ class Status(Action):
                 if reNoMirror.search(strMirror):
                     return -1  # -1 means no mirror defined
                 else:
-                    print('Get mirror status failed for engine "%s"' % 
+                    print('Get mirror status failed for engine "%s"' %
                           self._host)
 
     # update lststatus
@@ -636,7 +636,7 @@ class Status(Action):
             for i in range(5):
                 lstOverAll.append('--')
             return lstOverAll
-        
+
     def status_to_show(self):
         lstStatus = self.over_all()
         if lstStatus[1] > 0:
