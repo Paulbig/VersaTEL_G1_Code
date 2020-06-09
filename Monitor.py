@@ -1,7 +1,7 @@
 # coding:utf-8
 from __future__ import print_function
 import time
-from flask import Flask, render_template, request,make_response,jsonify
+from flask import Flask, render_template, request, make_response, jsonify
 from gevent.pywsgi import WSGIServer
 from threading import Thread
 import time
@@ -95,8 +95,6 @@ def monitor_db_4_thread():
         stopping_web(3)
 
 
-
-
 def start_web(mode):
     '''
 tlu = Time Last Update
@@ -177,19 +175,31 @@ tlu = Time Last Update
         return render_template("warning.html", lstWarningList=lstWarningList,
                                )
     
-    
-    
-    @app.route("/config")
-    def config():
-        return render_template("config.html")
-    
     def data(datadict):
         response = make_response(jsonify(datadict))
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
         response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
         return response
-        
+    
+    @app.route("/config")
+    def config():
+        return render_template("config.html")
+
+    @app.route("/config_interaction")
+    def config_interaction():
+        data = {}
+        if request.method == 'GET':
+            data_all = request.args.items()
+            for i in data_all:
+                data_one_dict = {i[0]:i[1]}
+                data.update(data_one_dict)
+            for i in data.values():
+                print(i)
+                if i == 'EmailSetting':
+                    gc.update_ini(data['column'], data['name'], data['name_val'])
+        return 'ok'
+
     @app.route("/config/data")
     def config_data():
         return data(gc.EmailConfig().email_all())
@@ -204,7 +214,7 @@ tlu = Time Last Update
         else:
             pass
 
-   # WSGIServer(('0.0.0.0', 5000), app).serve_forever()
+    # WSGIServer(('0.0.0.0', 5000), app).serve_forever()
     # FLASK_APP = myapp.py
     # FLASK_ENV = development
     # FLASK_ENV=development

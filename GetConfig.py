@@ -15,10 +15,21 @@ def read_config_file():
     objCFG.read(name_of_config_file)
     return objCFG
 
+
 def read_sys_config_file():
     objCFG = cp.ConfigParser(allow_no_value=True)
     objCFG.read(name_of_sys_config_file)
     return objCFG
+
+
+def update_ini(column, name, name_val):
+    ww = cp.ConfigParser(allow_no_value=True)
+    ww.read(name_of_config_file)
+    ww.set(column, name, name_val)
+    o = open("config.ini", "w+")
+    ww.write(o)
+    o.close()
+    return
 
 class EngineConfig(object):
     """docstring for EngineConfig"""
@@ -163,7 +174,6 @@ class Setting(object):
         self.cfg = read_config_file()
         self.sys_cfg = read_sys_config_file()
 
-
     def message_level(self):
 # Get the time interval Settings
         return int(self.sys_cfg.get('MessageLogging', 'msglevel'))
@@ -235,13 +245,4 @@ class General(object):
 
 
 if __name__ == '__main__':
-    #read_config_file().set("EngineSetting","trace_level","3")
-    #####
-#     ww = cp.ConfigParser(allow_no_value=True)
-#     ww.read(name_of_config_file)
-#     ww.set("EngineSetting","trace_level","3")
-#     o = open("config.ini","w+")
-#     ww.write(o)
-#     o.close()
-    print(ww.items("EngineSetting"))
     pass

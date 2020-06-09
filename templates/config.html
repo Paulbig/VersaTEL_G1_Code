@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="config">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="googlebot" content="noindex, nofollow" />
+<title>configuration</title>
+<link rel="stylesheet"
+	href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="{{ url_for('static',filename='config.css') }}"
+	rel="stylesheet" type="text/css" />
+<script src="{{ url_for('static',filename='JQuery.js') }}"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<div class="row">
+		<div class="col-xs-3">
+			<div class="defaultLeftMenu">
+				<div class="defaultLeftList">
+					<div class="defaultLeftContent">
+						<div class="text-center defaultListTitle">
+							<span>menu</span>
+						</div>
+						<!-- 利用data-target指定要折叠的分组列表 -->
+						<div class="panel-heading" id="collapseListGroupHeading1"
+							data-toggle="collapse" data-target="#collapseListGroup1"
+							role="tab">
+							<h5 class="text-center">
+								configuration &nbsp; <span
+									class="glyphicon glyphicon-menu-down down"> </span>
+							</h5>
+						</div>
+						<!-- .panel-collapse和.collapse标明折叠元素 .in表示要显示出来 -->
+						<div id="collapseListGroup1" class="panel-collapse collapse in"
+							role="tabpanel" aria-labelledby="collapseListGroupHeading1">
+							<ul class="text-center solutionList">
+								<li role="presentation" class="linkactive"><a
+									href="#tab1-1" aria-controls="tab1-1" role="tab"
+									data-toggle="tab">config</a></li>
+								<li role="presentation"><a href="#tab1-2"
+									aria-controls="tab1-2" role="tab" data-toggle="tab">sys_cfg</a></li>
+							</ul>
+						</div>
+						<!-- 利用data-target指定要折叠的分组列表 -->
+						<!-- 	<div class="panel-heading" id="collapseListGroupHeading3"
+							data-toggle="collapse" data-target="#collapseListGroup3"
+							role="tab">
+							<h5 class="text-center">
+								xx &nbsp; <span class="glyphicon glyphicon-menu-right right">
+								</span>
+							</h5>
+						</div>
+						.panel-collapse和.collapse标明折叠元素 .in表示要显示出来
+						<div id="collapseListGroup3" class="panel-collapse collapse "
+							role="tabpanel" aria-labelledby="collapseListGroupHeading3">
+							<ul class="text-center solutionList">
+								<li role="presentation"><a href="#tab3-1"
+									aria-controls="tab3-1" role="tab" data-toggle="tab"> xx1 </a></li>
+							</ul>
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-9 defaultRightPanel">
+			<div class="defaultPanelBody">
+				<div class="tab-content">
+					<!-- TAB选项1-1内容 -->
+					<div role="tabpanel" class="tab-pane active" id="tab1-1">
+						<!-- 选项卡菜单-->
+						<ul id="myTab" class="nav nav-tabs" role="tablist">
+							<li class="active"><a href="#EmailSetting" role="tab"
+								data-toggle="tab">EmailSetting</a></li>
+							<li><a href="#General" role="tab" data-toggle="tab">General</a></li>
+							<li><a href="#Engines" role="tab" data-toggle="tab">Engines</a></li>
+							<li><a href="#EngineSetting" role="tab" data-toggle="tab">EngineSetting</a></li>
+						</ul>
+						<!-- 选项卡面板 -->
+						<div id="myTabContent" class="tab-content">
+							<div class="tab-pane fade in active" id="EmailSetting">
+								<input type="hidden" id="EmailSet" value="EmailSetting">
+								<table class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>名字</th>
+											<th>值</th>
+											<th>操作</th>
+										</tr>
+									</thead>
+									<tbody id="EmailSetting_id">
+									</tbody>
+								</table>
+
+
+							</div>
+							<div class="tab-pane fade" id="General">General</div>
+							<div class="tab-pane fade" id="Engines">Engines</div>
+							<div class="tab-pane fade" id="EngineSetting">EngineSetting</div>
+						</div>
+					</div>
+
+					<!-- TAB选项1-2内容 -->
+					<div role="tabpanel" class="tab-pane " id="tab1-2">
+						<div class="defaultPanelHead">
+							<span class="defaultPanelTitle">
+								<h4>sys_cfg.ini</h4>
+							</span>
+						</div>
+						<div class="defaultPanelContent">
+							<div></div>
+						</div>
+					</div>
+					<!-- TAB选项一-内容 -->
+					<!-- <div role="tabpanel" class="tab-pane " id="tab3-1">
+						<div class="defaultPanelHead">
+							<span class="defaultPanelTitle">
+								<h4>1</h4>
+							</span>
+						</div>
+						<div class="defaultPanelContent">
+							<div>
+								<p>1</p>
+							</div>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery1.11.3 (necessary for Bo otstrap's JavaScript plugins) -->
+	<!-- Include all compiled plugins (below), or include individual files
+as needed -->
+	<!-- 切换折叠指示图标 -->
+	<script>
+  $(function() {
+    $(".panel-heading").click(function(e) {
+      $(this).find("span").toggleClass("glyphicon-menu-right");
+      $(this).find("span").toggleClass("glyphicon-menu-down");
+    });
+
+    $(".solutionList li").click(function() {
+      $(".solutionList .linkactive").removeClass('linkactive');
+      $(this).addClass('linkactive');
+    });
+  });
+</script>
+	<script type="text/javascript">
+    //获取发布模块类型
+    function getModuleInfo() {
+      $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: "/config/data",
+        success: function(data) {
+        for(i in data){
+        tr = 
+    		'<td class="td1">'+data[i][0]+'</td>'+
+    		'<td contentEditable="true" class="td2">'+data[i][1]+'</td>'+
+    		'<td >'+'<button type="button" class="btn btn-default btn-xs">修改</button>'+'</td>'
+       		$("#EmailSetting_id").append('<tr>'+tr+'</tr>')  
+        }
+        },
+        error: function(data) {
+          alert("加载失败");
+        }
+      });
+    }
+    $(function() {
+      getModuleInfo();
+    });
+  </script>
+	<script type="text/javascript">
+ $(document).ready(function(){ 	
+ $("#EmailSetting_id").on("click",":button",function(){
+	 var column =  $("#EmailSet").val()
+  	 var name = $(this).parents("tr").find(".td1").text()
+     var name_val = $(this).parents("tr").find(".td2").text()
+    	 $.ajax({
+         url:"/config_interaction",
+         type:"GET",
+         data:{
+             column:column,
+             name:name,
+             name_val:name_val
+         },
+         success:function () {
+			}																																																																																																																																			
+	});
+ }); 
+ }); 
+  </script>
+
+	<script src="{{ url_for('static',filename='config.js') }}"></script>
+</body>
+</html>
+
