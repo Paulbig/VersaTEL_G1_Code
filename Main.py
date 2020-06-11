@@ -19,9 +19,6 @@ setting = gc.Setting()
 strCFGFolder = setting.folder_cfgbackup()
 strTraceFolder = setting.folder_trace()
 
-
-Version = 'v0.0.1'
-
 # <<<Get Config Field>>>
 
 
