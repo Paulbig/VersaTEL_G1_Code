@@ -79,20 +79,73 @@
 						<!-- 选项卡面板 -->
 						<div id="myTabContent" class="tab-content">
 							<div class="tab-pane fade in active" id="EmailSetting">
-								<input type="hidden" id="EmailSet" value="EmailSetting">
-								<table class="table table-striped table-bordered table-hover">
-									<thead>
-										<tr>
-											<th>名字</th>
-											<th>值</th>
-											<th>操作</th>
-										</tr>
-									</thead>
-									<tbody id="EmailSetting_id">
-									</tbody>
-								</table>
+								<div class="col-sm-5">
+									<!-- ----------	 -->
+									<div class="form-group">
+										<label for="lastname" class="col-sm-3 control-label">enable</label>
+										<div class="col-sm-9">
+											<select class="form-control">
+												<option>yes</option>
+												<option>no</option>
+											</select>
+										</div>
+									</div>
+									<!-- ----------	 -->
+									<div class="form-group">
+										<label for="lastname" class="col-sm-3 control-label">host</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" value="">
+										</div>
+									</div>
+									<!-- ----------	 -->
+									<div class="form-group">
+										<label for="lastname" class="col-sm-3 control-label">post</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" value="">
+										</div>
+									</div>
+									<!-- ----------	 -->
+									<div class="form-group">
+										<label for="lastname" class="col-sm-3 control-label">encrypt</label>
+										<div class="col-sm-9">
+											<select class="form-control">
+												<option>ssl</option>
+												<option>tls</option>
+												<option>no</option>
+											</select>
+										</div>
+									</div>
+									<!-- ----------	 -->
+									<div class="form-group">
+										<label for="lastname" class="col-sm-3 control-label">sender</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" value="">
+										</div>
+									</div>
+									<!-- ----------	 -->
+									<div class="form-group">
+										<label for="lastname" class="col-sm-3 control-label">password</label>
+										<div class="col-sm-9">
+											<input type="password" class="form-control" value="">
+										</div>
+									</div>
+									<!-- ----------	 -->
+									<div class="form-group">
+										<label for="lastname" class="col-sm-3 control-label">receiver</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" value="">
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-9">
+										</div>
+										<div class="col-sm-3">
+											<input type="button" class="btn btn-success" value="修改">
+										</div>
+									</div>
 
-
+									<!-- ----------	 -->
+								</div>
 							</div>
 							<div class="tab-pane fade" id="General">General</div>
 							<div class="tab-pane fade" id="Engines">Engines</div>

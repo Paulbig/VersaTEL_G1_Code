@@ -215,11 +215,11 @@ tlu = Time Last Update
         else:
             pass
 
-    WSGIServer(('0.0.0.0', 5000), app).serve_forever()
+    # WSGIServer(('0.0.0.0', 5000), app).serve_forever()
     # FLASK_APP = myapp.py
     # FLASK_ENV = development
     # FLASK_ENV=development
-    #app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
 
 
 def stopping_web(intSec):
@@ -506,6 +506,7 @@ def haap_rt_info_to_show():
             info_status.append(dicALL[engine_alias]['level'])
             lstHAAPToShow.append(info_status)
         return lstHAAPToShow
+
 
 if __name__ == '__main__':
     pass
