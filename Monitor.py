@@ -191,6 +191,7 @@ tlu = Time Last Update
         data = {}
         if request.method == 'GET':
             data_all = request.args.items()
+            print(data_all)
             for i in data_all:
                 data_one_dict = {i[0]:i[1]}
                 data.update(data_one_dict)
@@ -505,7 +506,6 @@ def haap_rt_info_to_show():
             info_status.append(dicALL[engine_alias]['level'])
             lstHAAPToShow.append(info_status)
         return lstHAAPToShow
-
 
 if __name__ == '__main__':
     pass

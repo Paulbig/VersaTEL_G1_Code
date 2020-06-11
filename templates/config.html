@@ -176,14 +176,14 @@ as needed -->
 	 var column =  $("#EmailSet").val()
   	 var name = $(this).parents("tr").find(".td1").text()
      var name_val = $(this).parents("tr").find(".td2").text()
+     var name_val = $(this).parents("tr").find(".td2").text()
     	 $.ajax({
          url:"/config_interaction",
          type:"GET",
          data:{
-             column:column,
-             name:name,
-             name_val:name_val
+             column:{column:[name,name_val]},
          },
+         dataType:'JSON',
          success:function () {
 			}																																																																																																																																			
 	});
