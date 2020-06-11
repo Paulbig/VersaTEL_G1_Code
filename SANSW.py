@@ -33,20 +33,25 @@ lstPCCommand = setting.PCSANSwitchCommand()
 strPCFolder = setting.folder_PeriodicCheck()
 # <<<Get Config Field>>>
 
+
 def clear_all():
     for ip in list_sw_IP:
-        Action(ip, ssh_port, user, passwd, []).clear_all_port()  #初始化ip，端口数，用户名，密码，然后再调用方法
+        # 初始化ip，端口数，用户名，密码，然后再调用方法
+        Action(ip, ssh_port, user, passwd, []).clear_all_port()
+
 
 def clear_one_port(ip, sw_port):
     Action(ip, ssh_port, user, passwd, []).clear_one_port(sw_port)
 
+
 def print_porterror_all_formated():
     for i in range(len(list_sw_IP)):
         Status(list_sw_IP[i],
-                ssh_port,
-                user,
-                passwd,
-                list_sw_ports[i]).print_porterror_formated()
+               ssh_port,
+               user,
+               passwd,
+               list_sw_ports[i]).print_porterror_formated()
+
 
 def print_porterror_formated(ip):
     def get_index(ip, list_sw_IP):
@@ -57,21 +62,23 @@ def print_porterror_formated(ip):
     id = get_index(ip, list_sw_IP)
     if id is not None:
         Status(list_sw_IP[id],
-            ssh_port,
-            user,
-            passwd,
-            list_sw_ports[id]).print_porterror_formated()
+               ssh_port,
+               user,
+               passwd,
+               list_sw_ports[id]).print_porterror_formated()
 
 
 def print_switchshow_all():
     for ip in list_sw_IP:
         Action(ip, ssh_port, user, passwd, []).print_switchshow()
 
+
 def print_switchshow(ip):
     if ip in list_sw_IP:
         Action(ip, ssh_port, user, passwd, []).print_switchshow()
     else:
         print('"%s" is not configured in Config.ini' % ip)
+
 
 def periodically_check_all():
     for ip in list_sw_IP:
@@ -80,11 +87,13 @@ def periodically_check_all():
         Action(ip, ssh_port, user, passwd, []).periodic_check(
             lstPCCommand, strPCFolder, PCFile_name)
 
+
 def periodically_check(ip):
     PCFile_name = 'PC_%s_SANSwitch_%s.log' % (
         s.time_now_folder(), ip)
     Action(ip, ssh_port, user, passwd, []).periodic_check(
         lstPCCommand, strPCFolder, PCFile_name)
+
 
 def get_info_for_DB():
     origin = {}
@@ -95,7 +104,8 @@ def get_info_for_DB():
         origin.update(objSANSW.get_dicOrigin())
         sum_and_total.update(objSANSW.get_summary_total())
         PEFormated.update(objSANSW.get_dicPEFormated())
-    return origin,sum_and_total,PEFormated
+    return origin, sum_and_total, PEFormated
+
 
 class Action():
 
@@ -112,14 +122,14 @@ class Action():
         self._SWConn = None
         self._get_switch_info()
 
+    # @s.deco_Exception
 
-    #@s.deco_Exception
     def _get_switch_info(self):
         self._SWConn = conn.SSHConn(self._host,
-                               self._port,
-                               self._username,
-                               self._password,
-                               self._timeout)
+                                    self._port,
+                                    self._username,
+                                    self._password,
+                                    self._timeout)
         if self._SWConn.SSHConnection:
             self.strPorterrshow = self._SWConn.exctCMD(
                 'porterrshow')
@@ -130,8 +140,6 @@ class Action():
         else:
             self.strPorterrshow = None
             self.strSwitchshow = None
-
-
 
     @s.deco_Exception
     def print_porterrshow(self):
@@ -146,32 +154,31 @@ class Action():
             print(self.strSwitchshow)
 
     @s.deco_Exception
-    def clear_all_port(self):#
+    def clear_all_port(self):
         try:
             print('\nStart clearing all error count For SAN switch "{}"...'.format(
                 self._host))
-            self._SWConn.exctCMD('statsclear') #命令行命令
+            self._SWConn.exctCMD('statsclear')  # 命令行命令
             time.sleep(0.5)
             print('Clear error count for sw "{}" completed...'.format(
                 self._host))
         except:
             print('Clear error count for sw "{}" failed!!!'.format(self._host))
 
-
     @s.deco_Exception
-    def clear_one_port(self, intSWPort):#参数
+    def clear_one_port(self, intSWPort):  # 参数
         try:
             print('Start clearing port {} for SAN switch "{}"...'.format(
                 str(intSWPort), self._host))
-            #self._SWConn.exctCMD(
-                #'portstatsclear {}'.format(str(intSWPort)))
+            # self._SWConn.exctCMD(
+            # 'portstatsclear {}'.format(str(intSWPort)))
             self._SWConn.exctCMD('portstatsclear %s' % str(intSWPort))
             print('Clear error count of port {} for sw "{}" completed...\
                 '.format(str(intSWPort), self._host))
             return True
         except Exception as E:
             print('Clear error count failed!!!')
-    
+
     @s.deco_OutFromFolder
     def periodic_check(self, lstCommand, strResultFolder, strResultFile):
         s.GotoFolder(strResultFolder)
@@ -190,16 +197,16 @@ class Action():
                             print(strErr)
                             f.write(strErr)
 
+
 class Status(Action):
 
     def __init__(self, strIP, intPort, strUserName, strPasswd,
                  lstSWPort, intTimeout=2):
         Action.__init__(self, strIP, intPort, strUserName, strPasswd,
-                       lstSWPort, intTimeout)
+                        lstSWPort, intTimeout)
         self._dicPartPortError = None
         self._PutErrorToDict()
-        self.strIP=strIP
-
+        self.strIP = strIP
 
     @s.deco_Exception
     def _PutErrorToDict(self):
@@ -276,7 +283,8 @@ class Status(Action):
         return lstSumTotalWarning
 
     def print_porterror_formated(self):
-        tuplDesc = ('Port', 'RX', 'RT', 'EncOut', 'DiscC3', 'LinkFail', 'LossSigle', 'LossSync')
+        tuplDesc = ('Port', 'RX', 'RT', 'EncOut', 'DiscC3',
+                    'LinkFail', 'LossSigle', 'LossSync')
         tuplWidth = (5, 8, 8, 8, 8, 9, 10, 9)
 
         def _print_description():
@@ -298,7 +306,6 @@ class Status(Action):
         _print_description()
         _print_status_in_line(self._dicPartPortError)
 
-
     @s.deco_Exception
     def get_linkfail_by_port(self, intSWPort):
         if self._dicPartPortError:
@@ -315,7 +322,6 @@ class Status(Action):
             else:
                 print('Please correct the port number...')
 
-
     @s.deco_Exception
     def get_discC3_by_port(self, intSWPort):
         if self._dicPartPortError:
@@ -327,6 +333,7 @@ class Status(Action):
 
 class InfoForDB(object):
     """docstring for InfoForDB"""
+
     def __init__(self, strAlias, strIP, list_sw_ports):
         # super(InfoForDB, self).__init__()
         self._ip = strIP
@@ -335,23 +342,24 @@ class InfoForDB(object):
 
     def get_dicOrigin(self):
         return {str(self._alias): {'IP': self._ip,
-            'porterrshow': self._objSANSW.strPorterrshow,
-            'switchshow': self._objSANSW.strSwitchshow}}
+                                   'porterrshow': self._objSANSW.strPorterrshow,
+                                   'switchshow': self._objSANSW.strSwitchshow}}
 
     def get_dicPEFormated(self):
         return {str(self._alias): {'IP': self._ip,
-            'PTES_Formatd': self._objSANSW._dicPartPortError}}
+                                   'PTES_Formatd': self._objSANSW._dicPartPortError}}
 
     def get_summary_total(self):
         sum_and_total = self._objSANSW.sum_and_total()
         if sum_and_total:
             return {str(self._alias): {'IP': self._ip,
-                        'PE_Sum': sum_and_total[0],
-                        'PE_Total': sum_and_total[1]}}
+                                       'PE_Sum': sum_and_total[0],
+                                       'PE_Total': sum_and_total[1]}}
         else:
             return {str(self._alias): {'IP': self._ip,
-                        'PE_Sum': None,
-                        'PE_Total': None}}
+                                       'PE_Sum': None,
+                                       'PE_Total': None}}
+
 
 if __name__ == '__main__':
     pass

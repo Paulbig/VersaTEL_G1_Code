@@ -8,7 +8,9 @@ import re
 import Sundry as s
 import GetConfig as gc
 
+
 class FTPConn(object):
+
     def __init__(self, strIP, intPort, strUser, strPWD, intTO):
         self._host = strIP
         self._port = intPort
@@ -55,6 +57,7 @@ class FTPConn(object):
 
     def GetFile(self, strRemoteFolder, strLocalFolder, strRemoteFileName,
                 strLocalFileName, FTPtype='bin', intBufSize=1024):
+
         def _getfile():
             try:
                 ftp = self._Connection
@@ -88,6 +91,7 @@ class FTPConn(object):
 
     def PutFile(self, strRemoteFolder, strLocalFolder, strRemoteFileName,
                 strLocalFileName, FTPtype='bin', intBufSize=1024):
+
         def _putfile():
             try:
                 ftp = self._Connection
@@ -126,6 +130,7 @@ class FTPConn(object):
 
 
 class SSHConn(object):
+
     def __init__(self, host, port, username, password, timeout):
         self._host = host
         self._port = port
@@ -144,13 +149,11 @@ class SSHConn(object):
                                  username=self._username,
                                  password=self._password,
                                  timeout=self._timeout)
-            time.sleep(1)
-            objSSHClient.exec_command("\x003")
+#             time.sleep(1)
+#             objSSHClient.exec_command("\x003")
             self.SSHConnection = objSSHClient
         except:
             pass
-
-        
 
     # def download(self, remotepath, localpath):
     #     def _download():
@@ -188,8 +191,8 @@ class SSHConn(object):
             print('Connect retry for SAN switch "%s" ...' % self._host)
             self._connect()
 
-
     def exctCMD(self, command):
+
         def GetRusult():
             stdin, stdout, stderr = self.SSHConnection.exec_command(command)
             data = stdout.read()
@@ -222,6 +225,7 @@ class SSHConn(object):
 
 
 class HAAPConn(object):
+
     def __init__(self, strIP, intPort, strPWD, intTO):
         self._host = strIP
         self._port = intPort
@@ -310,7 +314,8 @@ class HAAPConn(object):
                         return get_result()
                     elif CLI_Conflict in str7Output:
                         self.Connection.write('y')
-                        strConfirmCLI = self.Connection.read_until(CLI, timeout=1)
+                        strConfirmCLI = self.Connection.read_until(
+                            CLI, timeout=1)
                         if CLI in strConfirmCLI:
                             return get_result()
 
