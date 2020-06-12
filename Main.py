@@ -6,7 +6,7 @@ import SANSW as sw
 import HAAP as haap
 import Sundry as s
 import Monitor as m
-import Consts as cs
+import consts as cs
 
 try:
     import configparser as cp

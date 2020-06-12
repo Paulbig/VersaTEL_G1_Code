@@ -8,7 +8,7 @@ from threading import Thread
 import time
 import operator
 import datetime
-import Consts as cs
+import consts as cs
 import SANSW as sw
 import HAAP as haap
 import Sundry as s

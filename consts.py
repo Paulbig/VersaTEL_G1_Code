@@ -1,7 +1,7 @@
 # coding:utf-8
 '''
 @author: Paul
-@note: consts setting
+@note: 全局变量定义
 '''
 
 VERSION = 'v0.0.1'
