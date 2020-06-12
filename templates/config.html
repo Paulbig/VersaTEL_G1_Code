@@ -84,9 +84,9 @@
 									<div class="form-group">
 										<label for="lastname" class="col-sm-3 control-label">enable</label>
 										<div class="col-sm-9">
-											<select class="form-control">
-												<option>yes</option>
-												<option>no</option>
+											<select class="form-control" id="EngineSet_enable">
+												<option value="yes">yes</option>
+												<option value="no">no</option>
 											</select>
 										</div>
 									</div>
@@ -94,24 +94,26 @@
 									<div class="form-group">
 										<label for="lastname" class="col-sm-3 control-label">host</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control" value="">
+											<input type="text" class="form-control" id="EngineSet_host"
+												value="">
 										</div>
 									</div>
 									<!-- ----------	 -->
 									<div class="form-group">
 										<label for="lastname" class="col-sm-3 control-label">post</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control" value="">
+											<input type="text" class="form-control" id="EngineSet_post"
+												value="">
 										</div>
 									</div>
 									<!-- ----------	 -->
 									<div class="form-group">
 										<label for="lastname" class="col-sm-3 control-label">encrypt</label>
 										<div class="col-sm-9">
-											<select class="form-control">
-												<option>ssl</option>
-												<option>tls</option>
-												<option>no</option>
+											<select class="form-control" id="EngineSet_encrypt">
+												<option value="ssl">ssl</option>
+												<option value="tls">tls</option>
+												<option value="no_ssl">no_ssl</option>
 											</select>
 										</div>
 									</div>
@@ -119,28 +121,32 @@
 									<div class="form-group">
 										<label for="lastname" class="col-sm-3 control-label">sender</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control" value="">
+											<input type="text" class="form-control" id="EngineSet_sender"
+												value="">
 										</div>
 									</div>
 									<!-- ----------	 -->
 									<div class="form-group">
 										<label for="lastname" class="col-sm-3 control-label">password</label>
 										<div class="col-sm-9">
-											<input type="password" class="form-control" value="">
+											<input type="password" class="form-control"
+												id="EngineSet_password" value="">
 										</div>
 									</div>
 									<!-- ----------	 -->
 									<div class="form-group">
 										<label for="lastname" class="col-sm-3 control-label">receiver</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control" value="">
+											<input type="text" class="form-control"
+												id="EngineSet_receiver" value="">
 										</div>
 									</div>
-									<div class="form-group">
-										<div class="col-sm-9">
-										</div>
+							 
+									<div class="form-group" >
+										<div class="col-sm-9"></div>
 										<div class="col-sm-3">
-											<input type="button" class="btn btn-success" value="修改">
+											<input type="button" class="btn btn-success"
+												id="EngineSet_btn" value="修改" style="margin-top: 10px;">
 										</div>
 									</div>
 
@@ -198,6 +204,8 @@ as needed -->
     });
   });
 </script>
+
+
 	<script type="text/javascript">
     //获取发布模块类型
     function getModuleInfo() {
@@ -206,13 +214,27 @@ as needed -->
         dataType: "JSON",
         url: "/config/data",
         success: function(data) {
-        for(i in data){
-        tr = 
-    		'<td class="td1">'+data[i][0]+'</td>'+
-    		'<td contentEditable="true" class="td2">'+data[i][1]+'</td>'+
-    		'<td >'+'<button type="button" class="btn btn-default btn-xs">修改</button>'+'</td>'
-       		$("#EmailSetting_id").append('<tr>'+tr+'</tr>')  
-        }
+     	if(data[0][1] == "yes"){
+        $("#EngineSet_enable option[value='yes']").attr('selected',true);
+    	}else {
+        $("#EngineSet_enable option[value='no']").attr('selected',true);
+    	};
+    	 $("#EngineSet_host").val(data[1][1]);
+    	 $("#EngineSet_post").val(data[2][1]);
+    	 
+    	if(data[3][1] == "ssl"){
+        $("#EngineSet_encrypt option[value='ssl']").attr('selected',true);
+    	}else if(data[3][1] == "tls"){
+        $("#EngineSet_encrypt option[value='tls']").attr('selected',true);
+    	}else{
+        $("#EngineSet_encrypt option[value='no_ssl']").attr('selected',true);
+    	};
+    	 
+    	 $("#EngineSet_sender").val(data[4][1]);
+    	 $("#EngineSet_password").val(data[5][1]);
+    	 $("#EngineSet_receiver").val(data[6][1]);
+    	
+    	
         },
         error: function(data) {
           alert("加载失败");
@@ -223,6 +245,15 @@ as needed -->
       getModuleInfo();
     });
   </script>
+	<!-- 	<script type="text/javascript">
+    var sv = document.getElementById('EngineSet_enable_hid').value;
+    if(sv = 'yes'){
+        $("#EngineSet_enable option[value='yes']").attr('selected',true);
+    }else {
+        $("#EngineSet_enable option[value='no']").attr('selected',true);
+    }
+</script> -->
+	<!-- $("#EngineSet_enable_hid").val(""); -->
 	<script type="text/javascript">
  $(document).ready(function(){ 	
  $("#EmailSetting_id").on("click",":button",function(){
