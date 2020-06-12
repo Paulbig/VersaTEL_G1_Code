@@ -6,6 +6,7 @@ import SANSW as sw
 import HAAP as haap
 import Sundry as s
 import Monitor as m
+import consts as cs
 
 try:
     import configparser as cp
@@ -18,9 +19,6 @@ import GetConfig as gc
 setting = gc.Setting()
 strCFGFolder = setting.folder_cfgbackup()
 strTraceFolder = setting.folder_trace()
-
-
-Version = 'v0.0.1'
 
 # <<<Get Config Field>>>
 
@@ -370,7 +368,7 @@ def main():
             print('rt(realtime) or db(datarase)')
 
     elif sys.argv[1] == 'v':
-        print("VersaTEL G1", Version)
+        print("VersaTEL G1", cs.VERSION)
     else:
         print(strHelp)
 
