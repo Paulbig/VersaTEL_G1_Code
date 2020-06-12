@@ -162,6 +162,7 @@ class Action():
             time.sleep(0.5)
             print('Clear error count for sw "{}" completed...'.format(
                 self._host))
+            return True
         except:
             print('Clear error count for sw "{}" failed!!!'.format(self._host))
 
