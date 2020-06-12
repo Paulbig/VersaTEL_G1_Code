@@ -141,12 +141,13 @@
 												id="EngineSet_receiver" value="">
 										</div>
 									</div>
-							 
-									<div class="form-group" >
+
+									<div class="form-group">
 										<div class="col-sm-9"></div>
 										<div class="col-sm-3">
 											<input type="button" class="btn btn-success"
-												id="EngineSet_btn" value="修改" style="margin-top: 10px;">
+												id="EngineSet_btn" value="修改" onclick="EngineSet_btn()"
+												style="margin-top: 10px;">
 										</div>
 									</div>
 
@@ -255,24 +256,47 @@ as needed -->
 </script> -->
 	<!-- $("#EngineSet_enable_hid").val(""); -->
 	<script type="text/javascript">
- $(document).ready(function(){ 	
- $("#EmailSetting_id").on("click",":button",function(){
-	 var column =  $("#EmailSet").val()
-  	 var name = $(this).parents("tr").find(".td1").text()
-     var name_val = $(this).parents("tr").find(".td2").text()
-     var name_val = $(this).parents("tr").find(".td2").text()
+function EngineSet_btn(){
+	 var options_enable = $("#EngineSet_enable option:selected");
+	 var enable = options_enable.val();
+//	alert(enable);
+	 
+	 var host =  $("#EngineSet_host").val();
+	// alert(host);
+	 
+	 var post =  $("#EngineSet_post").val();
+	 //alert(post);
+	 
+	 var options_encrypt = $("#EngineSet_encrypt option:selected");
+	 var encrypt = options_encrypt.val();
+	 //alert(encrypt);
+	 
+	 var sender =  $("#EngineSet_sender").val();
+	 //alert(sender);
+	 
+	 var password =  $("#EngineSet_password").val();
+	 //alert(password);
+	 
+	 var receiver =  $("#EngineSet_receiver").val();
+	 //alert(receiver);
+	 
     	 $.ajax({
          url:"/config_interaction",
          type:"GET",
          data:{
-             column:{column:[name,name_val]},
+         enable:enable,
+         host:host,
+         post:post,
+         encrypt:encrypt,
+         sender:sender,
+         password:password,
+         receiver:receiver   
          },
          dataType:'JSON',
          success:function () {
 			}																																																																																																																																			
 	});
- }); 
- }); 
+ }; 
   </script>
 
 	<script src="{{ url_for('static',filename='config.js') }}"></script>
