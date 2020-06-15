@@ -67,7 +67,7 @@ def test_get_info_for_DB():
     assert isinstance(a[2], dict)
 
 
-class TestAction():
+class TestAction:
 
     def setup_class(self):
         self.act = sw.Action(ip, ssh_port, user, pw, [])
@@ -93,7 +93,7 @@ class TestAction():
         assert self.act.periodic_check(ssc, pcfolder, fname) == None
 
 
-class TestStatus():
+class TestStatus:
 
     def setup_class(self):
         self.st = sw.Status(ip, ssh_port, user, pw, [1, 2, 3, 4, 5, 6])
@@ -113,7 +113,7 @@ class TestStatus():
             date) == [2900, 12, 3400000, 333, 5900000000, 22000, 2]
 
     def test_dict_string_to_int(self):
-        assert self.st._dict_string_to_int(self.st._dicPartPortError) == None
+        assert self.st._dict_string_to_int(self.st._dicPartPortError) is not None
 
     def test_sum_and_total(self):
         assert self.st.sum_and_total() is not None
@@ -122,7 +122,7 @@ class TestStatus():
         assert self.st.print_porterror_formated() == None
 
 
-class TestInfoForDB():
+class TestInfoForDB:
 
     def setup_class(self):
         self.infodb = sw.InfoForDB('switch0', '10.203.1.9', [1, 2, 3, 4, 5, 6])

@@ -4,7 +4,7 @@ import io
 import sys
 
 
-class TestEmail():
+class TestEmail:
 
     def setup_class(self):
         self.E = SendEmail.Email()
