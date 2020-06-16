@@ -186,20 +186,16 @@ tlu = Time Last Update
     def config():
         return render_template("config.html")
 
-    @app.route("/config_interaction")
+    @app.route("/config_interaction",methods=['POST','GET'])
     def config_interaction():
-        data = {}
         if request.method == 'GET':
             data_all = request.args.items()
-            print(data_all)
-            for i in data_all:
-                data_one_dict = {i[0]:i[1]}
-                data.update(data_one_dict)
-            for i in data.values():
-                print(i)
-                if i == 'EmailSetting':
-                    gc.update_ini(data['column'], data['name'], data['name_val'])
-        return 'ok'
+            ins = gc.write_config(data_all)
+            response = make_response(jsonify(ins))
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+            response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+        return response    
 
     @app.route("/config/data")
     def config_data():

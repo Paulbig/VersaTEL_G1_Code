@@ -11,8 +11,12 @@
 	rel="stylesheet" type="text/css" />
 <script src="{{ url_for('static',filename='JQuery.js') }}"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
 </head>
+<style>
+.modal-backdrop {
+	z-index: 0;
+}
+</style>
 <body>
 	<div class="row">
 		<div class="col-xs-3">
@@ -79,6 +83,7 @@
 						<!-- 选项卡面板 -->
 						<div id="myTabContent" class="tab-content">
 							<div class="tab-pane fade in active" id="EmailSetting">
+								<input type="hidden" id="EmailS" value="EmailSetting">
 								<div class="col-sm-5">
 									<!-- ----------	 -->
 									<div class="form-group">
@@ -100,9 +105,9 @@
 									</div>
 									<!-- ----------	 -->
 									<div class="form-group">
-										<label for="lastname" class="col-sm-3 control-label">post</label>
+										<label for="lastname" class="col-sm-3 control-label">port</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control" id="EngineSet_post"
+											<input type="text" class="form-control" id="EngineSet_port"
 												value="">
 										</div>
 									</div>
@@ -146,14 +151,46 @@
 										<div class="col-sm-9"></div>
 										<div class="col-sm-3">
 											<input type="button" class="btn btn-success"
-												id="EngineSet_btn" value="修改" onclick="EngineSet_btn()"
-												style="margin-top: 10px;">
+												data-toggle="modal" data-target="#ESet_btn" value="修改"
+												onclick="EngineSet_btn()" style="margin-top: 10px;">
 										</div>
 									</div>
-
 									<!-- ----------	 -->
 								</div>
+								<div class="modal fade" id="ESet_btn" tabindex="-1"
+									role="dialog" aria-labelledby="ESet_btnLabel">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button data-dismiss="modal" class="close" type="button">
+													<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<div class="table-responsive">
+													<table class="table" id="Email_Setting_status">
+														<thead>
+															<tr>
+																<th>entry</th>
+																<th>status</th>
+															</tr>
+														</thead>
+														<tbody id="Email_Setting_status">
+														</tbody>
+													</table>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button data-dismiss="modal" class="btn btn-default"
+													type="button">关闭</button>
+											</div>
+										</div>
+										<!-- /.modal-content -->
+									</div>
+									<!-- /.modal-dialog -->
+								</div>
 							</div>
+							<!-- ----------	 -->
 							<div class="tab-pane fade" id="General">General</div>
 							<div class="tab-pane fade" id="Engines">Engines</div>
 							<div class="tab-pane fade" id="EngineSetting">EngineSetting</div>
@@ -221,7 +258,7 @@ as needed -->
         $("#EngineSet_enable option[value='no']").attr('selected',true);
     	};
     	 $("#EngineSet_host").val(data[1][1]);
-    	 $("#EngineSet_post").val(data[2][1]);
+    	 $("#EngineSet_port").val(data[2][1]);
     	 
     	if(data[3][1] == "ssl"){
         $("#EngineSet_encrypt option[value='ssl']").attr('selected',true);
@@ -234,8 +271,10 @@ as needed -->
     	 $("#EngineSet_sender").val(data[4][1]);
     	 $("#EngineSet_password").val(data[5][1]);
     	 $("#EngineSet_receiver").val(data[6][1]);
-    	
-    	
+    	 
+    	 $("#Email_Setting_hid").val([data[0][0],data[1][0],data[2][0],data[3][0],data[4][0],data[5][0]],data[6][0]);
+    	 
+    	 
         },
         error: function(data) {
           alert("加载失败");
@@ -246,17 +285,10 @@ as needed -->
       getModuleInfo();
     });
   </script>
-	<!-- 	<script type="text/javascript">
-    var sv = document.getElementById('EngineSet_enable_hid').value;
-    if(sv = 'yes'){
-        $("#EngineSet_enable option[value='yes']").attr('selected',true);
-    }else {
-        $("#EngineSet_enable option[value='no']").attr('selected',true);
-    }
-</script> -->
-	<!-- $("#EngineSet_enable_hid").val(""); -->
 	<script type="text/javascript">
 function EngineSet_btn(){
+	var  EngineSetting =  $("#EmailS").val();
+
 	 var options_enable = $("#EngineSet_enable option:selected");
 	 var enable = options_enable.val();
 //	alert(enable);
@@ -264,8 +296,8 @@ function EngineSet_btn(){
 	 var host =  $("#EngineSet_host").val();
 	// alert(host);
 	 
-	 var post =  $("#EngineSet_post").val();
-	 //alert(post);
+	 var port =  $("#EngineSet_port").val();
+	 //alert(port);
 	 
 	 var options_encrypt = $("#EngineSet_encrypt option:selected");
 	 var encrypt = options_encrypt.val();
@@ -279,26 +311,38 @@ function EngineSet_btn(){
 	 
 	 var receiver =  $("#EngineSet_receiver").val();
 	 //alert(receiver);
-	 
     	 $.ajax({
          url:"/config_interaction",
          type:"GET",
          data:{
+         title:EngineSetting,
          enable:enable,
          host:host,
-         post:post,
+         port:port,
          encrypt:encrypt,
          sender:sender,
          password:password,
          receiver:receiver   
          },
-         dataType:'JSON',
-         success:function () {
-			}																																																																																																																																			
+         success:function (data) {
+         for(var i in data){
+           tr = '<td >'+i+'</td>'+
+            	'<td >'+data[i]+'</td>'
+              	$("#Email_Setting_status").append('<tr class="parent" >'+tr+'</tr>') 
+         }
+         
+		 }
 	});
  }; 
   </script>
 
+	<script>
+$(function(){
+    $("#ESet_btn").on("shown.bs.modal",function(){
+      alert("数据插入完成，请查看");
+    });
+});
+</script>
 	<script src="{{ url_for('static',filename='config.js') }}"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 # coding:utf-8
-
+import sys
 from collections import OrderedDict as Odd
 try:
     import configparser as cp
@@ -22,14 +22,28 @@ def read_sys_config_file():
     return objCFG
 
 
-def update_ini(column, name, name_val):
-    ww = cp.ConfigParser(allow_no_value=True)
-    ww.read(name_of_config_file)
-    ww.set(column, name, name_val)
-    o = open("config.ini", "w+")
-    ww.write(o)
-    o.close()
-    return
+def write_config(data_all):
+    insdict = {}
+    cf = cp.ConfigParser(allow_no_value=True)
+    try:
+        cf.read(name_of_config_file)
+        datadict = dict(data_all)
+        for i in datadict.keys():
+            try:
+                if i == "title":
+                    continue
+                cf.set(datadict['title'], i, datadict[i])
+                # insert status 插入状态
+                ins = "1"
+            except:
+                ins = '2'
+            ins_dict = {i:ins}
+            insdict.update(ins_dict)
+        cf.write(open(name_of_config_file, 'w'))
+    except:
+        print("数据更新失败")
+    return insdict
+
 
 class EngineConfig(object):
     """docstring for EngineConfig"""
