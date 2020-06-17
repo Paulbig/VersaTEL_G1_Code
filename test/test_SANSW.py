@@ -22,8 +22,8 @@ sys_cfg = cp.ConfigParser(allow_no_value=True)
 sys_cfg.read('sys_cfg.ini')
 ssc = list(i[0] for i in sys_cfg.items('PCSANSwitchCommand'))
 pcfolder = sys_cfg.get('FolderSetting', 'PeriodicCheck')
-fname = 'PC_%s_SANSwitch_%s.log' % (
-    datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'), ip)
+time_now = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+fname = 'PC_%s_SANSwitch_%s.log' % (time_now, ip)
 
 
 def test_clear_all():
