@@ -1,6 +1,8 @@
 # coding:utf-8
 import sys
 from collections import OrderedDict as Odd
+from findertools import sleep
+import time
 try:
     import configparser as cp
 except Exception:
@@ -21,28 +23,6 @@ def read_sys_config_file():
     objCFG.read(name_of_sys_config_file)
     return objCFG
 
-
-def write_config(data_all):
-    insdict = {}
-    cf = cp.ConfigParser(allow_no_value=True)
-    try:
-        cf.read(name_of_config_file)
-        datadict = dict(data_all)
-        for i in datadict.keys():
-            try:
-                if i == "title":
-                    continue
-                cf.set(datadict['title'], i, datadict[i])
-                # insert status 插入状态
-                ins = "1"
-            except:
-                ins = '2'
-            ins_dict = {i:ins}
-            insdict.update(ins_dict)
-        cf.write(open(name_of_config_file, 'w'))
-    except:
-        print("数据更新失败")
-    return insdict
 
 
 class EngineConfig(object):

@@ -4,6 +4,7 @@ import time
 from flask import Flask, render_template, request, make_response, jsonify
 from gevent.pywsgi import WSGIServer
 from threading import Thread
+import collections
 import time
 import operator
 import datetime
@@ -13,6 +14,10 @@ import Sundry as s
 import SendEmail as se
 import DB as db
 import GetConfig as gc
+global ins
+global datadict
+ins_dict = {}
+name_of_config_file = 'config.ini'
 try:
     import configparser as cp
 except Exception:
@@ -185,17 +190,46 @@ tlu = Time Last Update
     @app.route("/config")
     def config():
         return render_template("config.html")
+        
 
+    
     @app.route("/config_interaction",methods=['POST','GET'])
     def config_interaction():
+        global datadict
         if request.method == 'GET':
             data_all = request.args.items()
-            ins = gc.write_config(data_all)
-            response = make_response(jsonify(ins))
-            response.headers['Access-Control-Allow-Origin'] = '*'
-            response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
-            response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
-        return response    
+            print(data_all)
+            datadict = dict(data_all)
+            print(datadict)
+            write_config()
+        return "ok"
+    
+    def write_config():
+        print("sss")
+        global datadict
+        global ins_dict
+        cf = cp.ConfigParser(allow_no_value=True)
+        cf.read(name_of_config_file)
+        for i in datadict.keys():
+            try:
+                if i == "title":
+                    continue
+                cf.set(datadict['title'],i, datadict[i])
+                cf.write(open(name_of_config_file, 'w'))
+                # insert status 插入状态
+                ins = "1"
+                print("......")
+                time.sleep(5)
+                ins_dict[i] = ins
+                print('ins_dict:',ins_dict)
+            except:
+                ins = '2'
+                ins_dict = {i:ins}
+
+    @app.route("/config_interaction_data",methods=['POST','GET'])
+    def config_interaction_data():
+        print("sssss:",ins_dict)
+        return data(ins_dict)
 
     @app.route("/config/data")
     def config_data():

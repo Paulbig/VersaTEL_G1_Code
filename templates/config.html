@@ -168,7 +168,7 @@
 											</div>
 											<div class="modal-body">
 												<div class="table-responsive">
-													<table class="table" id="Email_Setting_status">
+													<table class="table">
 														<thead>
 															<tr>
 																<th>entry</th>
@@ -176,6 +176,37 @@
 															</tr>
 														</thead>
 														<tbody id="Email_Setting_status">
+															<tr>
+																<td>enable</td>
+																<td id="enable">未完成</td>
+															</tr>
+															<tr>
+																<td>host</td>
+																<td id="host">未完成</td>
+															</tr>
+															<tr>
+																<td>port</td>
+																<td id="port">未完成</td>
+															</tr>
+															<tr>
+																<td>encrypt</td>
+																<td id="encrypt">未完成</td>
+															</tr>
+															<tr>
+																<td>sender</td>
+																<td id="sender">未完成</td>
+															</tr>
+															<tr>
+																<td>password</td>
+																<td id="password">未完成</td>
+															</tr>
+															<tr>
+																<td>receiver</td>
+																<td id="receiver">未完成</td>
+															</tr>
+
+
+
 														</tbody>
 													</table>
 												</div>
@@ -273,8 +304,6 @@ as needed -->
     	 $("#EngineSet_receiver").val(data[6][1]);
     	 
     	 $("#Email_Setting_hid").val([data[0][0],data[1][0],data[2][0],data[3][0],data[4][0],data[5][0]],data[6][0]);
-    	 
-    	 
         },
         error: function(data) {
           alert("加载失败");
@@ -325,23 +354,104 @@ function EngineSet_btn(){
          receiver:receiver   
          },
          success:function (data) {
+        //var tdobj = document.getElementById('enable');
+		//tdobj.innerText = "ssss";
+		 }
+	})
+		 setTimeout(function () {
+		document.getElementById('enable').innerText = "处理中";
+		document.getElementById('host').innerText = "处理中";
+		document.getElementById('port').innerText = "处理中";
+		document.getElementById('encrypt').innerText = "处理中";
+		document.getElementById('sender').innerText = "处理中";
+		document.getElementById('password').innerText = "处理中";
+		document.getElementById('receiver').innerText = "处理中";
+	}, 3000);
+	
+	
+ }; 
+
+ 
+ 
+  </script>
+	<script type="text/javascript">
+	        setInterval("show_data()",5000)
+            function show_data() {
+            $.ajax({
+	        type: "GET",
+	        dataType: "JSON",
+	        url: "/config_interaction_data",
+	        success: function(data) {
+	     	for (var i in data) {
+	     		if (i == "enable"){
+	     		 if(data[i] == "1"){
+	     		 document.getElementById('enable').innerText = "已完成";
+	     		 }
+	     		}else if (i == "host"){
+	     		 if(data[i] == "1"){
+	     		 document.getElementById('host').innerText = "已完成";
+	     		 }
+	     		}else if (i == "port"){
+	     		 if(data[i] == "1"){
+	     		 document.getElementById('port').innerText = "已完成";
+	     		 }
+	     		}else if (i == "encrypt"){
+	     		 if(data[i] == "1"){
+	     		 document.getElementById('encrypt').innerText = "已完成";
+	     		 }
+	     		}else if (i == "sender"){
+	     		 if(data[i] == "1"){
+	     		 document.getElementById('sender').innerText = "已完成";
+	     		 }
+	     		}else if (i == "password"){
+	     		 if(data[i] == "1"){
+	     		 document.getElementById('password').innerText = "已完成";
+	     		 }
+	     		}else if (i == "receiver"){
+	     		 if(data[i] == "1"){
+	     		 document.getElementById('receiver').innerText = "已完成";
+	     		 }
+	     		}
+	     	}
+		 		}
+			});
+   }
+            $(function() {
+      show_data();
+    }); 
+ 
+  </script>
+
+
+	<!-- <script type="text/javascript">
+	
+	   alert(data);
+	        if(data.keys() == "enable" ){
+	        	if(data.value() == "1"){
+	        	document.getElementById('enable').innerText = "已完成";
+	        	};
+	        }
+	
+	
+	
+	    $("#Email_Setting_status").empty();
+	        for(var i in data){
+           		tr = '<td >'+i+'</td>'+
+            	'<td >'+data[i]+'</td>'
+              	$("#Email_Setting_status").append('<tr class="parent" >'+tr+'</tr>') 
+         }
+	
+	
+       $("#Email_Setting_status").val("")
          for(var i in data){
            tr = '<td >'+i+'</td>'+
             	'<td >'+data[i]+'</td>'
               	$("#Email_Setting_status").append('<tr class="parent" >'+tr+'</tr>') 
          }
-         
-		 }
-	});
- }; 
-  </script>
+</script> -->
+
 
 	<script>
-$(function(){
-    $("#ESet_btn").on("shown.bs.modal",function(){
-      alert("数据插入完成，请查看");
-    });
-});
 </script>
 	<script src="{{ url_for('static',filename='config.js') }}"></script>
 </body>
