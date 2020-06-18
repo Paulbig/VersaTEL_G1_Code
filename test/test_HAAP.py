@@ -1,9 +1,6 @@
 import pytest
-import io
-import sys
 import datetime
 import HAAP as haap
-import GetConfig as gc
 
 ip = '10.203.1.6'
 t_port = 23
