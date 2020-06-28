@@ -113,7 +113,8 @@ class TestStatus:
             date) == [2900, 12, 3400000, 333, 5900000000, 22000, 2]
 
     def test_dict_string_to_int(self):
-        assert self.st._dict_string_to_int(self.st._dicPartPortError) is not None
+        assert self.st._dict_string_to_int(
+            self.st._dicPartPortError) is not None
 
     def test_sum_and_total(self):
         assert self.st.sum_and_total() is not None
