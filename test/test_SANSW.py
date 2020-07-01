@@ -40,6 +40,7 @@ def test_clear_one_port():
 def test_print_porterror_all_formated():
     assert sw.print_porterror_all_formated() == None
 
+
 @pytest.mark.ptes
 def test_print_porterror_formated():
     assert sw.print_porterror_formated(ip) == None

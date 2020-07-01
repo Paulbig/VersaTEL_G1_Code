@@ -78,7 +78,7 @@ def test_is_port():
 @pytest.mark.sts
 @pytest.mark.mnt
 def test_ShowErr():
-    assert sun.ShowErr('a','b','c','d', 'e') == None
+    assert sun.ShowErr('a', 'b', 'c', 'd', 'e') == None
 
 
 @pytest.mark.bc

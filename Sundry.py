@@ -137,7 +137,7 @@ def ShowErr(*argvs):
 |    Error message: {:<55}|
 |        {:<66}|
 ----------------------------------------------------------------------------\
-'''.format(argvs[2], err_msg=(argvs[3] if argvs[3] else ''))))
+'''.format(argvs[2], argvs[3] if argvs[3] else '')))
     elif error_level == 2:
         pass
     elif error_level == 3:
@@ -150,7 +150,7 @@ def ShowErr(*argvs):
 |        {:<66}|
 ----------------------------------------------------------------------------\
 
-'''.format(argvs[0], argvs[1], argvs[2], err_msg=(argvs[3] if argvs[3] else ''))))
+'''.format(argvs[0], argvs[1], argvs[2], argvs[3] if argvs[3] else '')))
 
 
 def GotoFolder(strFolder):

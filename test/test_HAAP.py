@@ -22,6 +22,7 @@ def test_backup_config_all():
 def test_backup_config():
     assert haap.backup_config(ip) == None
 
+
 @pytest.mark.fw
 def test_change_firmware():
     pass
@@ -35,6 +36,7 @@ def test_get_trace_all():
 @pytest.mark.gt
 def test_get_trace():
     assert haap.get_trace(ip, level)
+
 
 @pytest.mark.ec
 def test_execute_multi_commands():
@@ -60,6 +62,7 @@ def test_show_stauts_all():
 @pytest.mark.sts
 def test_show_stauts():
     assert haap.show_stauts(ip) == None
+
 
 @pytest.mark.st
 def test_set_time_all():

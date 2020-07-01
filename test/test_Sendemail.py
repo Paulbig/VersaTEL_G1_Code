@@ -3,6 +3,7 @@ import SendEmail
 import io
 import sys
 
+
 @pytest.mark.mnt
 class TestEmail:
 

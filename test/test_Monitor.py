@@ -13,7 +13,7 @@ def test_check_all_haap():
     assert mon.check_all_haap() == None
 
 
-@pytest.mark.mntv
+@pytest.mark.mnt
 def test_check_all_sansw():
     assert mon.check_all_sansw() == None
 
