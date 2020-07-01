@@ -13,87 +13,110 @@ pcfname = 'PC_%s_Engine_%s.log' % (time_now, ip)
 level = 3
 
 
+@pytest.mark.bc
 def test_backup_config_all():
     assert haap.backup_config_all() == None
 
 
+@pytest.mark.bc
 def test_backup_config():
     assert haap.backup_config(ip) == None
 
-
+@pytest.mark.fw
 def test_change_firmware():
     pass
 
 
+@pytest.mark.gt
 def test_get_trace_all():
     assert haap.get_trace_all(level) == None
 
 
+@pytest.mark.gt
 def test_get_trace():
     assert haap.get_trace(ip, level)
 
-
+@pytest.mark.ec
 def test_execute_multi_commands():
-    pass
+    assert haap.execute_multi_commands(ip, 'cmd.txt') == None
 
 
+@pytest.mark.sts
 def test_print_description():
     assert haap._print_description() == None
 
 
+@pytest.mark.sts
 def test_print_status_in_line():
     lStatus = haap.Status(ip, t_port, passwd, ftp_port).status_to_show()
     assert haap._print_status_in_line(lStatus) == None
 
 
+@pytest.mark.sts
 def test_show_stauts_all():
     assert haap.show_stauts_all() == None
 
 
+@pytest.mark.sts
 def test_show_stauts():
     assert haap.show_stauts(ip) == None
 
-
+@pytest.mark.st
 def test_set_time_all():
     assert haap.set_time_all() == None
 
 
+@pytest.mark.st
 def test_set_time():
     assert haap.set_time(ip) == None
 
 
+@pytest.mark.stm
 def test_show_time_all():
     assert haap.show_time_all() == None
 
 
+@pytest.mark.stm
 def test_show_time():
     assert haap.show_time(ip) == None
 
 
+@pytest.mark.pc
 def test_periodically_check_all():
     assert haap.periodically_check_all() == None
 
 
+@pytest.mark.pc
 def test_periodically_check():
     assert haap.periodically_check(ip) == None
 
 
+@pytest.mark.mnt
 def test_origin():
     lStatus = haap.Status(ip, t_port, passwd, ftp_port)
     assert haap.origin('engine0', lStatus)
 
 
+@pytest.mark.mnt
 def test_info():
     lStatus = haap.Status(ip, t_port, passwd, ftp_port)
     assert haap.info('engine0', lStatus)
 
 
+@pytest.mark.mnt
 def test_data_for_db():
     data = haap.data_for_db()
     assert data[0].keys() == ['engine0']
     assert data[1].keys() == ['engine0']
 
 
+@pytest.mark.bc
+@pytest.mark.gt
+@pytest.mark.ec
+@pytest.mark.pc
+@pytest.mark.fw
+@pytest.mark.st
+@pytest.mark.stm
 class TestAction:
 
     def setup_class(self):
@@ -122,7 +145,7 @@ class TestAction:
         pass
 
     def test_auto_commands(self):
-        pass
+        assert self.action.auto_commands('cmd.txt') == None
 
     def test_get_trace(self):
         assert self.action.get_trace(tracefname, level) == None
@@ -140,6 +163,8 @@ class TestAction:
         assert self.action.show_time() == None
 
 
+@pytest.mark.sts
+@pytest.mark.mnt
 class TestUptime:
 
     def setup_class(self):
@@ -159,6 +184,8 @@ class TestUptime:
         assert self.uptime.uptime_to_show() == '12d 23h 14m'
 
 
+@pytest.mark.sts
+@pytest.mark.mnt
 class TestStatus:
 
     def setup_class(self):

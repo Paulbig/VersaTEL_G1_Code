@@ -26,38 +26,46 @@ time_now = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 fname = 'PC_%s_SANSwitch_%s.log' % (time_now, ip)
 
 
+@pytest.mark.ptcl
 def test_clear_all():
     assert sw.clear_all() == None
 
 
+@pytest.mark.ptcl
 def test_clear_one_port():
     assert sw.clear_one_port(ip, ssh_port) == None
 
 
+@pytest.mark.ptes
 def test_print_porterror_all_formated():
     assert sw.print_porterror_all_formated() == None
 
-
+@pytest.mark.ptes
 def test_print_porterror_formated():
     assert sw.print_porterror_formated(ip) == None
 
 
+@pytest.mark.sws
 def test_print_switchshow_all():
     assert sw.print_switchshow_all() == None
 
 
+@pytest.mark.sws
 def test_print_switchshow():
     assert sw.print_switchshow(ip) == None
 
 
+@pytest.mark.pc
 def test_periodically_check_all():
     assert sw.periodically_check_all() == None
 
 
+@pytest.mark.pc
 def test_periodically_check():
     assert sw.periodically_check(ip) == None
 
 
+@pytest.mark.mnt
 def test_get_info_for_DB():
     a = []
     for i in sw.get_info_for_DB():
@@ -67,6 +75,9 @@ def test_get_info_for_DB():
     assert isinstance(a[2], dict)
 
 
+@pytest.mark.ptcl
+@pytest.mark.sws
+@pytest.mark.pc
 class TestAction:
 
     def setup_class(self):
@@ -93,6 +104,7 @@ class TestAction:
         assert self.act.periodic_check(ssc, pcfolder, fname) == None
 
 
+@pytest.mark.ptes
 class TestStatus:
 
     def setup_class(self):
@@ -123,6 +135,7 @@ class TestStatus:
         assert self.st.print_porterror_formated() == None
 
 
+@pytest.mark.mnt
 class TestInfoForDB:
 
     def setup_class(self):

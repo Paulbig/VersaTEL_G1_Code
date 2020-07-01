@@ -1,7 +1,17 @@
 import pytest
 import Conn
+import io
+import sys
+import re
 
 
+@pytest.mark.bc
+@pytest.mark.gt
+@pytest.mark.ec
+@pytest.mark.pc
+@pytest.mark.fw
+@pytest.mark.st
+@pytest.mark.stm
 class TestFTPConn:
 
     def setup_class(self):
@@ -11,13 +21,20 @@ class TestFTPConn:
         password = ''
         timeout = 1.5
         self.ftp = Conn.FTPConn(engineip, ftp_port, user, password, timeout)
+        conn = self.ftp._FTPconnect()
 
     def test_FTPconnect(self):
-        assert self.ftp._FTPconnect() == True
+        assert self.ftp._Connection != None
 
     def test_GetFile(self):
-        remote = 'ftp_data_20200618_170728.txt'
         local = 'Trace_10.203.1.6_Secondary.log'
+        self.ftp._Connection.cwd('mbtrace')
+        sys.stdout = io.BytesIO()
+        self.ftp._Connection.dir()
+        a = sys.stdout.getvalue()
+        retrace = re.compile(r'(ftp_data_\d{8}_\d{6}.txt)')
+        remote = str(retrace.search(a).group())
+        self.ftp._Connection.cwd('/')
         assert self.ftp.GetFile('mbtrace', '.', remote, local) == True
 
     def test_PutFile(self):
@@ -28,6 +45,10 @@ class TestFTPConn:
         assert self.ftp._Connection == None
 
 
+@pytest.mark.ptcl
+@pytest.mark.sws
+@pytest.mark.pc
+@pytest.mark.ptes
 class TestSSHConn:
 
     def setup_class(self):
@@ -53,6 +74,15 @@ class TestSSHConn:
         # assert self.ssh.ssh_connect == None
 
 
+@pytest.mark.bc
+@pytest.mark.gt
+@pytest.mark.ec
+@pytest.mark.pc
+@pytest.mark.fw
+@pytest.mark.st
+@pytest.mark.stm
+@pytest.mark.sts
+@pytest.mark.mnt
 class TestHAAPConn:
 
     def setup_class(self):

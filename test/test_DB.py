@@ -15,10 +15,12 @@ warn = 'Engine AH'
 confirm = 0
 
 
+@pytest.mark.mnt
 def test_haap_insert():
     assert DB.haap_insert(time, Origin, Info) == None
 
 
+@pytest.mark.mnt
 def test_haap_last_record():
     assert DB.haap_last_record()
 
@@ -27,23 +29,28 @@ def test_switch_insert():
     assert DB.switch_insert(time, origin, total, dic) == None
 
 
+@pytest.mark.mnt
 def test_switch_last_info():
     assert DB.switch_last_info()
 
 
+@pytest.mark.mnt
 def test_insert_warning():
     assert DB.insert_warning(timeshow, ip, device,
                              level,  warn, confirm) == None
 
 
+@pytest.mark.mnt
 def test_update_warning():
     assert DB.update_warning() == None
 
 
+@pytest.mark.mnt
 def test_get_unconfirm_warning():
     assert DB.get_unconfirm_warning() == None
 
 
+@pytest.mark.mnt
 class TestHAAP:
 
     def setup_class(self):
@@ -56,6 +63,7 @@ class TestHAAP:
         assert self.haap.query_last_record()
 
 
+@pytest.mark.mnt
 class TestSANSW:
 
     def setup_class(self):
@@ -68,6 +76,7 @@ class TestSANSW:
         assert self.sw.query_last_records()
 
 
+@pytest.mark.mnt
 class TestWarning:
 
     def test_insert(self):
