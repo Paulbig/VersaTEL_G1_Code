@@ -4,8 +4,17 @@ import pytest
 import datetime
 import time
 import os
+import shutil
 import xlwt
+try:
+    import configparser as cp
+except Exception:
+    import ConfigParser as cp
 
+
+cfg = cp.ConfigParser(allow_no_value=True)
+cfg.read('config.ini')
+ip = str(cfg.get('Engines', 'engine0'))
 
 @pytest.mark.bc
 def test_time_now_folder():
@@ -101,7 +110,7 @@ class TestTiming:
         self.timing = sun.Timing()
 
     def a(self):
-        print('aaaaaa')
+        print('a test')
 
     def test_add_interval(self):
         assert self.timing.add_interval(self.a, 3) == None
@@ -161,15 +170,22 @@ class TestTraceAnalyse:
         self.trace = ls[-1]
         self.analyse = sun.TraceAnalyse(self.trace)
 
+    def teardown_class(self):
+        shutil.rmtree(self.trace)
+        os.chdir('..')
+        try:
+            os.removedirs('Trace')
+        except:pass
+
     def test_run(self):
         assert self.analyse.run() == None
 
     def test_get_trace_file_list(self):
         os.chdir(self.trace)
         file = self.analyse._get_trace_file_list()
-        assert file[0] == 'Trace_10.203.1.6_Secondary.log'
-        assert file[1] == 'Trace_10.203.1.6_Primary.log'
-        assert file[2] == 'Trace_10.203.1.6_Trace.log'
+        assert file[0] == 'Trace_%s_Secondary.log' % ip
+        assert file[1] == 'Trace_%s_Primary.log' % ip
+        assert file[2] == 'Trace_%s_Trace.log' % ip
         os.chdir('../')
 
     def test_analyse_file(self):
@@ -177,17 +193,21 @@ class TestTraceAnalyse:
 
     def test_find_error(self):
         assert self.analyse._find_error(
-            '%s/Trace_10.203.1.6_Secondary.log' % self.trace) == None
+            '%s/Trace_%s_Secondary.log' % (self.trace, ip)) == None
 
     def test_generate_excel_file_name(self):
         assert self.analyse._generate_excel_file_name(
-            'Trace_10.203.1.6_Secondary.log') == 'TraceAnalyze_Trace_10.203.1.6_Secondary.xls'
+            'Trace_%s_Secondary.log' % ip) == 'TraceAnalyze_Trace_%s_Secondary.xls' % ip
 
     def test_write_to_excel(self):
-        pass
-        # objExcel = xlwt.Workbook()
-        # assert self.analyse._write_to_excel(objExcel, 'abts_received', '')
+        objExcel = xlwt.Workbook()
+        date =  [('11:11', 'P1', 'test', 'test'), ('12:12', 'P1', 'test', 'test')]
+        assert self.analyse._write_to_excel(objExcel, 'test_error', date) == None
+        xls_file_name = 'TraceAnalyze_Trace_Test.xls'
+        objExcel.save(xls_file_name)
+        os.remove(xls_file_name)
+        
 
     def test_read_file(self):
         assert self.analyse._read_file(
-            'Trace_10.203.1.6_Secondary.log') == None
+            'Trace_%s_Secondary.log' % ip) == None

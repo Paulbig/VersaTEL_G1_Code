@@ -16,12 +16,12 @@ ip = str(cfg.get('SANSwitches', 'switch0'))
 ssh_port = cfg.getint('SANSwitcheSetting', 'ssh_port')
 user = str(cfg.get('SANSwitcheSetting', 'username'))
 pw = str(cfg.get('SANSwitcheSetting', 'password'))
-port = cfg.get('SANSwitchePorts', 'switch0')
+port = eval(cfg.get('SANSwitchePorts', 'switch0'))
 
 sys_cfg = cp.ConfigParser(allow_no_value=True)
 sys_cfg.read('sys_cfg.ini')
 ssc = list(i[0] for i in sys_cfg.items('PCSANSwitchCommand'))
-pcfolder = sys_cfg.get('FolderSetting', 'PeriodicCheck')
+pcfolder = str(sys_cfg.get('FolderSetting', 'PeriodicCheck'))
 time_now = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 fname = 'PC_%s_SANSwitch_%s.log' % (time_now, ip)
 
@@ -109,7 +109,7 @@ class TestAction:
 class TestStatus:
 
     def setup_class(self):
-        self.st = sw.Status(ip, ssh_port, user, pw, [1, 2, 3, 4, 5, 6])
+        self.st = sw.Status(ip, ssh_port, user, pw, port)
 
     def test_PutErrorToDict(self):
         assert self.st._dicPartPortError is not None
@@ -140,7 +140,7 @@ class TestStatus:
 class TestInfoForDB:
 
     def setup_class(self):
-        self.infodb = sw.InfoForDB('switch0', '10.203.1.9', [1, 2, 3, 4, 5, 6])
+        self.infodb = sw.InfoForDB('switch0', ip, port)
 
     def test_get_dicOrigin(self):
         date = self.infodb.get_dicOrigin()
@@ -154,3 +154,8 @@ class TestInfoForDB:
         date = self.infodb.get_summary_total()
         PE_Sum = date['switch0']['PE_Sum']
         assert isinstance(PE_Sum, list)
+
+
+
+if __name__ == '__main__': 
+    print(port)

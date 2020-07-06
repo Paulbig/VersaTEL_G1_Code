@@ -3,6 +3,15 @@ import Conn
 import io
 import sys
 import re
+import os
+try:
+    import configparser as cp
+except Exception:
+    import ConfigParser as cp
+
+
+cfg = cp.ConfigParser(allow_no_value=True)
+cfg.read('config.ini')
 
 
 @pytest.mark.bc
@@ -15,11 +24,12 @@ import re
 class TestFTPConn:
 
     def setup_class(self):
-        engineip = '10.203.1.6'
-        ftp_port = 21
+        engineip = str(cfg.get('Engines', 'engine0'))
+        ftp_port = cfg.getint('EngineSetting', 'ftp_port')
         user = 'adminftp'
         password = ''
         timeout = 1.5
+        print(engineip, ftp_port)
         self.ftp = Conn.FTPConn(engineip, ftp_port, user, password, timeout)
         conn = self.ftp._FTPconnect()
 
@@ -27,7 +37,7 @@ class TestFTPConn:
         assert self.ftp._Connection != None
 
     def test_GetFile(self):
-        local = 'Trace_10.203.1.6_Secondary.log'
+        local = 'Trace_test.log'
         self.ftp._Connection.cwd('mbtrace')
         sys.stdout = io.BytesIO()
         self.ftp._Connection.dir()
@@ -36,6 +46,7 @@ class TestFTPConn:
         remote = str(retrace.search(a).group())
         self.ftp._Connection.cwd('/')
         assert self.ftp.GetFile('mbtrace', '.', remote, local) == True
+        os.remove('Trace_test.log')
 
     def test_PutFile(self):
         pass
@@ -52,10 +63,10 @@ class TestFTPConn:
 class TestSSHConn:
 
     def setup_class(self):
-        switchip = '10.203.1.9'
-        ssh_port = 22
-        user = 'admin'
-        password = 'Feixi@123'
+        switchip = str(cfg.get('SANSwitches', 'switch0'))
+        ssh_port = cfg.getint('SANSwitcheSetting', 'ssh_port')
+        user = str(cfg.get('SANSwitcheSetting', 'username'))
+        password = str(cfg.get('SANSwitcheSetting', 'password'))
         timeout = 2
         self.ssh = Conn.SSHConn(switchip, ssh_port, user, password, timeout)
 
@@ -86,8 +97,8 @@ class TestSSHConn:
 class TestHAAPConn:
 
     def setup_class(self):
-        engineip = '10.203.1.6'
-        haap_port = 23
+        engineip = str(cfg.get('Engines', 'engine0'))
+        haap_port = cfg.getint('EngineSetting', 'telnet_port')
         password = ''
         timeout = 1.5
         self.haap = Conn.HAAPConn(engineip, haap_port, password, timeout)

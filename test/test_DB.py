@@ -3,12 +3,19 @@ import DB
 import datetime
 import HAAP as haap
 import SANSW as sw
+try:
+    import configparser as cp
+except Exception:
+    import ConfigParser as cp
 
+
+cfg = cp.ConfigParser(allow_no_value=True)
+cfg.read('config.ini')
 time = datetime.datetime.now()
 timeshow = time.strftime('%Y-%m-%d %H:%M:%S')
 Origin, Info = haap.data_for_db()
 origin, total, dic = sw.get_info_for_DB()
-ip = '10.203.1.6'
+ip = str(cfg.get('Engines', 'engine0'))
 device = 'engine0'
 level = 2
 warn = 'Engine AH'

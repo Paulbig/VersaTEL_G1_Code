@@ -1,11 +1,20 @@
 import pytest
 import datetime
 import HAAP as haap
+import time
+import os
+try:
+    import configparser as cp
+except Exception:
+    import ConfigParser as cp
 
-ip = '10.203.1.6'
-t_port = 23
-passwd = ''
-ftp_port = 21
+
+cfg = cp.ConfigParser(allow_no_value=True)
+cfg.read('config.ini')
+ip = str(cfg.get('Engines', 'engine0'))
+t_port = cfg.getint('EngineSetting', 'telnet_port')
+passwd = str(cfg.get('EngineSetting', 'password'))
+ftp_port = cfg.getint('EngineSetting', 'ftp_port')
 time_now = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 cfgfname = '%s/%s' % ('CFGBackup', time_now)
 tracefname = '%s/%s' % ('Trace', time_now)
@@ -25,7 +34,28 @@ def test_backup_config():
 
 @pytest.mark.fw
 def test_change_firmware():
-    pass
+    status = haap.Status(ip, t_port, passwd, ftp_port)
+    fw_version = status.get_version()
+    if fw_version == None:
+        print("Can't get firmware version.")
+        return
+    elif fw_version == 'V15.9.8.4':
+        haap.change_firmware(ip, 'FW_15.9.8.2_OR.bin')
+    else:
+        haap.change_firmware(ip, 'FW_15.9.8.4_OR.bin')
+    time.sleep(60)
+    try:
+        status = haap.Status(ip, t_port, passwd, ftp_port)
+        fw_version_new = status.get_version()
+    except:
+        fw_version_new = None
+    if fw_version_new:
+        if fw_version == 'V15.9.8.4':
+            assert fw_version_new == 'V15.9.8.2'
+        else:
+            assert fw_version_new == 'V15.9.8.4'
+    else:
+        print("Can't get firmware version.")
 
 
 @pytest.mark.gt
@@ -40,7 +70,11 @@ def test_get_trace():
 
 @pytest.mark.ec
 def test_execute_multi_commands():
+    with open('cmd.txt', 'w') as f:
+            f.write("vpd\nvaai\nport\n")
+            f.close()
     assert haap.execute_multi_commands(ip, 'cmd.txt') == None
+    os.remove('cmd.txt')
 
 
 @pytest.mark.sts
@@ -118,11 +152,10 @@ def test_data_for_db():
 @pytest.mark.ec
 @pytest.mark.pc
 @pytest.mark.fw
-@pytest.mark.st
-@pytest.mark.stm
 class TestAction:
 
     def setup_class(self):
+        time.sleep(5)
         self.action = haap.Action(ip, t_port, passwd, ftp_port)
 
     def test_telnet_connect(self):
@@ -144,11 +177,12 @@ class TestAction:
     def test_backup(self):
         assert self.action.backup(cfgfname) == None
 
-    def test_change_FW(self):
-        pass
-
     def test_auto_commands(self):
+        with open('cmd.txt', 'w') as f:
+            f.write("vpd\nvaai\nport\n")
+            f.close()
         assert self.action.auto_commands('cmd.txt') == None
+        os.remove('cmd.txt')
 
     def test_get_trace(self):
         assert self.action.get_trace(tracefname, level) == None
