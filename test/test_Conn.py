@@ -48,9 +48,6 @@ class TestFTPConn:
         assert self.ftp.GetFile('mbtrace', '.', remote, local) == True
         os.remove('Trace_test.log')
 
-    def test_PutFile(self):
-        pass
-
     def test_close(self):
         assert self.ftp.close() == None
         assert self.ftp._Connection == None

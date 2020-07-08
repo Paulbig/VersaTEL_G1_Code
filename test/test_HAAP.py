@@ -68,6 +68,14 @@ def test_get_trace():
     assert haap.get_trace(ip, level)
 
 
+# def test_analyse_trace_all():
+#     assert haap.analyse_trace_all(level) == None
+
+
+# def test_analyse_trace():
+#     assert haap.analyse_trace(ip, level) == None
+
+
 @pytest.mark.ec
 def test_execute_multi_commands():
     with open('cmd.txt', 'w') as f:

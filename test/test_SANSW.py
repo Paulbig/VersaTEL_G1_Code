@@ -127,13 +127,25 @@ class TestStatus:
 
     def test_dict_string_to_int(self):
         assert self.st._dict_string_to_int(
-            self.st._dicPartPortError) is not None
+            self.st._dicPartPortError) != None
 
     def test_sum_and_total(self):
-        assert self.st.sum_and_total() is not None
+        assert self.st.sum_and_total() != None
+
+    # def test_sum_total_and_warning(self):
+    #     assert self.st.sum_total_and_warning() == None
 
     def test_print_porterror_formated(self):
         assert self.st.print_porterror_formated() == None
+
+    # def test_get_linkfail_by_port(self):
+    #     assert self.st.get_linkfail_by_port(port) == None
+
+    # def test_get_encout_by_port(self):
+    #     assert self.st.get_encout_by_port(port) == None
+
+    # def test_get_discC3_by_port(self):
+    #     assert self.st.get_discC3_by_port(port) == None
 
 
 @pytest.mark.mnt
