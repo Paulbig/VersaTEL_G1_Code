@@ -33,7 +33,7 @@ def test_clear_all():
 
 @pytest.mark.ptcl
 def test_clear_one_port():
-    assert sw.clear_one_port(ip, ssh_port) == None
+    assert sw.clear_one_port(ip, 1) == None
 
 
 @pytest.mark.ptes
@@ -99,7 +99,7 @@ class TestAction:
         assert 'completed' in sys.stdout.getvalue()
 
     def test_clear_one_port(self):
-        assert self.act.clear_one_port(port) == True
+        assert self.act.clear_one_port(1) == True
 
     def test_periodic_check(self):
         assert self.act.periodic_check(ssc, pcfolder, fname) == None
