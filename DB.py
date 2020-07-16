@@ -107,7 +107,7 @@ class HAAP(object):
         t = collHAAP(time=time, origin=origin, info=info)
         t.save()
 
-#     获取交换机一段时间数据，暂未使用，后续可能使用
+#     获取引擎一段时间数据，暂未使用，后续可能使用
 #     def query_range(self, time_start, time_end):
 #         return collHAAP.objects(date__gte=time_start,
 #                          date__lt=time_end).order_by('-date')
@@ -123,7 +123,7 @@ class SANSW(object):
                       sum_total=sum_total, ptes=ptes,)
         t.save()
 
-#     获取交换机一段时间数据，暂未使用，后续可能使用
+#     获取SAN交换机一段时间数据，暂未使用，后续可能使用
 #     def query_range(self, time_start, time_end):
 #         return collSANSW.objects(date__gte=time_start,
 #                           date__lt=time_end).order_by('-date')
