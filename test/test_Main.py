@@ -47,7 +47,7 @@ def test_ptes_all():
 @pytest.mark.ptes
 def test_ptes_ip_f():
     string = output('ptes ip')
-    assert 'Please provide correct switch ip...' == string
+    assert 'Please provide correct switch ip...\n' == string
 
 
 @pytest.mark.ptes
@@ -73,13 +73,13 @@ def test_ptcl_all():
 @pytest.mark.ptcl
 def test_ptcl_ip_f():
     string = output('ptcl ip')
-    assert 'Please provide correct switch ip...' == string
+    assert 'Please provide correct switch ip...\n' == string
 
 
 @pytest.mark.ptcl
 def test_ptcl_port_f():
     string = output('ptcl %s a' % swip)
-    assert 'Please provide correct port number...' == string
+    assert 'Please provide correct port number...\n' == string
 
 
 @pytest.mark.ptcl
@@ -105,7 +105,7 @@ def test_sws_all():
 @pytest.mark.sws
 def test_sws_ip_f():
     string = output('sws ip')
-    assert 'Please provide correct switch ip...' == string
+    assert 'Please provide correct switch ip...\n' == string
 
 
 @pytest.mark.sws
@@ -131,7 +131,7 @@ def test_bc_all():
 @pytest.mark.bc
 def test_bc_ip_f():
     string = output('bc ip')
-    assert 'Please provide correct engine ip...' == string
+    assert 'Please provide correct engine ip...\n' == string
 
 
 @pytest.mark.bc
@@ -159,7 +159,7 @@ def test_gt_all():
 @pytest.mark.gt
 def test_gt_all_level_f():
     string = output('gt all 50')
-    assert 'Trace level must be "1" or "2" or "3"' == string
+    assert 'Trace level must be "1" or "2" or "3"\n' == string
 
 
 @pytest.mark.gt
@@ -171,13 +171,13 @@ def test_gt():
 @pytest.mark.gt
 def test_gt_ip_f():
     string = output('gt ip 2')
-    assert 'Please provide correct engine ip...' == string
+    assert 'Please provide correct engine ip...\n' == string
 
 
 @pytest.mark.gt
 def test_gt_ip_level_f():
     string = output('gt %s 50' % engineip)
-    assert 'Trace level must be "1" or "2" or "3"' == string
+    assert 'Trace level must be "1" or "2" or "3"\n' == string
 
 
 @pytest.mark.at
@@ -191,7 +191,7 @@ def test_at_help():
 @pytest.mark.at
 def test_at_folder_f():
     string = output('at tracea')
-    assert 'Please provide correct trace folder' == string
+    assert 'Please provide correct trace folder\n' == string
 
 
 @pytest.mark.at
@@ -287,7 +287,7 @@ def test_sts_all():
 @pytest.mark.sts
 def test_sts_ip_f():
     string = output('sts ip')
-    assert 'Please provide correct engine ip...' == string
+    assert 'Please provide correct engine ip...\n' == string
 
 
 @pytest.mark.sts
@@ -311,7 +311,7 @@ def test_st_all():
 @pytest.mark.st
 def test_st_ip_f():
     string = output('st ip')
-    assert 'Please provide correct engine ip...' == string
+    assert 'Please provide correct engine ip...\n' == string
 
 
 @pytest.mark.st
@@ -335,7 +335,7 @@ def test_stm_all():
 @pytest.mark.stm
 def test_stm_ip_f():
     string = output('stm ip')
-    assert 'Please provide correct engine ip...' == string
+    assert 'Please provide correct engine ip...\n' == string
 
 
 @pytest.mark.stm
@@ -374,7 +374,7 @@ def test_pc_haap_ip():
 @pytest.mark.pc
 def test_pc_haap_ip_f():
     string = output('pc haap ip')
-    assert string == 'Please provide correct engine ip...'
+    assert string == 'Please provide correct engine ip...\n'
 
 
 @pytest.mark.pc
@@ -392,7 +392,7 @@ def test_pc_sw_ip():
 @pytest.mark.pc
 def test_pc_sw_ip_f():
     string = output('pc sw ip')
-    assert string == 'Please provide correct SAN switch ip...'
+    assert string == 'Please provide correct SAN switch ip...\n'
 
 
 @pytest.mark.mnt
@@ -418,7 +418,7 @@ def test_mnt_db():
 @pytest.mark.mnt
 def test_mnt_f():
     string = output('mnt f')
-    assert 'rt(realtime) or db(datarase)' == string
+    assert 'rt(realtime) or db(datarase)\n' == string
 
 
 def test_version():
