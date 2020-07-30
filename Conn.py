@@ -307,20 +307,18 @@ class HAAPConn(object):
 
                 if CLI in strEnterOutput:
                     return get_result()
-                else:
-                    for i in self._product:
-                        if i in strEnterOutput:
-                            self.Connection.write('7')
-                            str7Output = self.Connection.read_until(
-                                CLI, timeout=1)
-                            if CLI in str7Output:
-                                return get_result()
-                            elif CLI_Conflict in str7Output:
-                                self.Connection.write('y')
-                                strConfirmCLI = self.Connection.read_until(
-                                    CLI, timeout=1)
-                                if CLI in strConfirmCLI:
-                                    return get_result()
+                elif any(map(lambda x: x in strEnterOutput,self._product)):
+                    self.Connection.write('7')
+                    str7Output = self.Connection.read_until(
+                        CLI, timeout=1)
+                    if CLI in str7Output:
+                        return get_result()
+                    elif CLI_Conflict in str7Output:
+                        self.Connection.write('y')
+                        strConfirmCLI = self.Connection.read_until(
+                            CLI, timeout=1)
+                        if CLI in strConfirmCLI:
+                            return get_result()
 
         if self.Connection:
             return execute_at_CLI()
