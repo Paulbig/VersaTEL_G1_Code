@@ -218,10 +218,10 @@ class SSHConn(object):
             output = _return(GetRusult())
             if output:
                 return output
-
-    def close(self):
-        if self.ssh_connect:
-            self.ssh_connect.close()
+# 暂未使用
+#     def close(self):
+#         if self.ssh_connect:
+#             self.ssh_connect.close()
 
 
 class HAAPConn(object):
@@ -329,12 +329,10 @@ class HAAPConn(object):
         #         print('Please Check Telnet Connection to "{}" \n\n'.format(
         #             self._host))
 
-    def Close(self):
-        if self.Connection:
-            self.Connection.close()
-
-    connection = property(
-        get_connection_status, doc="Get HAAPConn instance's connection")
+#         暂未使用
+#     def close(self):
+#         if self.Connection:
+#             self.Connection.close()
 
 
 if __name__ == '__main__':
