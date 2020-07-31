@@ -103,7 +103,11 @@ tlu = Time Last Update
 
         if mode == 'rt':
             StatusHAAP = haap_rt_info_to_show()
-            StatusSANSW = sansw_rt_info_to_show()
+            if sw_enable_status == 'yes':
+                StatusSANSW = sansw_rt_info_to_show()
+            else:
+                StatusSANSW = 0
+                
             if StatusHAAP:
                 StatusHAAP.sort(key=operator.itemgetter(0))
                 tlu_haap = s.time_now_to_show()
