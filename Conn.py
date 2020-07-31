@@ -231,7 +231,7 @@ class HAAPConn(object):
         self._port = intPort
         self._password = strPWD
         self._timeout = intTO
-        self._product = gc.General().get_PRODUCT()
+        self._product = ['CIO', 'HA-AP']
         self._strLoginPrompt = 'Enter password'
         self._strMainMenuPrompt = 'Coredump Menu'
         self._strCLIPrompt = 'CLI>'
@@ -307,9 +307,10 @@ class HAAPConn(object):
 
                 if CLI in strEnterOutput:
                     return get_result()
-                elif self._product.encode(encoding="utf-8") in strEnterOutput:
+                elif any(map(lambda x: x in strEnterOutput,self._product)):
                     self.Connection.write('7')
-                    str7Output = self.Connection.read_until(CLI, timeout=1)
+                    str7Output = self.Connection.read_until(
+                        CLI, timeout=1)
                     if CLI in str7Output:
                         return get_result()
                     elif CLI_Conflict in str7Output:
