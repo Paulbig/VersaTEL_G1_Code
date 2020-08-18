@@ -8,6 +8,7 @@ from threading import Thread
 import time
 import operator
 import datetime
+import consts as cs
 import SANSW as sw
 import HAAP as haap
 import Sundry as s
@@ -107,7 +108,7 @@ tlu = Time Last Update
                 StatusSANSW = sansw_rt_info_to_show()
             else:
                 StatusSANSW = 0
-                
+
             if StatusHAAP:
                 StatusHAAP.sort(key=operator.itemgetter(0))
                 tlu_haap = s.time_now_to_show()
@@ -161,7 +162,8 @@ tlu = Time Last Update
                                status_sansw=StatusSANSW,
                                status_warning=status_warning,
                                interval_web_refresh=interval_web_refresh,
-                               sw_enable_status=sw_enable_status
+                               sw_enable_status=sw_enable_status,
+                               VERSION=cs.VERSION
                                )
 
     @app.route("/warning/")

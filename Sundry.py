@@ -96,9 +96,9 @@ def is_IP(strIP):
     else:
         return False
 
-
-def is_IP_list(lstIP):
-    return all(map(is_IP, lstIP))
+# 暂未使用
+# def is_IP_list(lstIP):
+#     return all(map(is_IP, lstIP))
 
 
 def is_file(strFileName):
@@ -120,8 +120,7 @@ def is_port(intPortNum):
         return True
     if type(intPortNum) == str:
         if intPortNum.isdigit():
-            if type(eval(intPortNum)) == int:
-                return True
+            return True
     return False
 
 
