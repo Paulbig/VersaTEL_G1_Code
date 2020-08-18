@@ -43,10 +43,13 @@ class TestFTPConn:
         self.ftp._Connection.dir()
         a = sys.stdout.getvalue()
         retrace = re.compile(r'(ftp_data_\d{8}_\d{6}.txt)')
-        remote = str(retrace.search(a).group())
-        self.ftp._Connection.cwd('/')
-        assert self.ftp.GetFile('mbtrace', '.', remote, local) == True
-        os.remove('Trace_test.log')
+        try:
+            remote = str(retrace.search(a).group())
+            self.ftp._Connection.cwd('/')
+            assert self.ftp.GetFile('mbtrace', '.', remote, local) == True
+            os.remove('Trace_test.log')
+        else:
+            pass
 
     def test_close(self):
         assert self.ftp.close() == None
