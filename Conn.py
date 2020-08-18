@@ -10,6 +10,7 @@ import GetConfig as gc
 
 
 class FTPConn(object):
+
     def __init__(self, strIP, intPort, strUser, strPWD, intTO):
         self._host = strIP
         self._port = intPort
@@ -56,6 +57,7 @@ class FTPConn(object):
 
     def GetFile(self, strRemoteFolder, strLocalFolder, strRemoteFileName,
                 strLocalFileName, FTPtype='bin', intBufSize=1024):
+
         def _getfile():
             try:
                 ftp = self._Connection
@@ -89,6 +91,7 @@ class FTPConn(object):
 
     def PutFile(self, strRemoteFolder, strLocalFolder, strRemoteFileName,
                 strLocalFileName, FTPtype='bin', intBufSize=1024):
+
         def _putfile():
             try:
                 ftp = self._Connection
@@ -127,6 +130,7 @@ class FTPConn(object):
 
 
 class SSHConn(object):
+
     def __init__(self, host, port, username, password, timeout):
         self._host = host
         self._port = port
@@ -145,8 +149,8 @@ class SSHConn(object):
                                  username=self._username,
                                  password=self._password,
                                  timeout=self._timeout)
-            time.sleep(1)
-            objSSHClient.exec_command("\x003")
+#             time.sleep(1)
+#             objSSHClient.exec_command("\x003")
             self.SSHConnection = objSSHClient
         except:
             pass
@@ -188,6 +192,7 @@ class SSHConn(object):
             self._connect()
 
     def exctCMD(self, command):
+
         def GetRusult():
             stdin, stdout, stderr = self.SSHConnection.exec_command(command)
             data = stdout.read()
@@ -213,19 +218,20 @@ class SSHConn(object):
             output = _return(GetRusult())
             if output:
                 return output
-
-    def close(self):
-        if self.ssh_connect:
-            self.ssh_connect.close()
+# 暂未使用
+#     def close(self):
+#         if self.ssh_connect:
+#             self.ssh_connect.close()
 
 
 class HAAPConn(object):
+
     def __init__(self, strIP, intPort, strPWD, intTO):
         self._host = strIP
         self._port = intPort
         self._password = strPWD
         self._timeout = intTO
-        self._product = gc.General().get_PRODUCT()
+        self._product = ['CIO', 'HA-AP']
         self._strLoginPrompt = 'Enter password'
         self._strMainMenuPrompt = 'Coredump Menu'
         self._strCLIPrompt = 'CLI>'
@@ -301,9 +307,10 @@ class HAAPConn(object):
 
                 if CLI in strEnterOutput:
                     return get_result()
-                elif self._product.encode(encoding="utf-8") in strEnterOutput:
+                elif any(map(lambda x: x in strEnterOutput,self._product)):
                     self.Connection.write('7')
-                    str7Output = self.Connection.read_until(CLI, timeout=1)
+                    str7Output = self.Connection.read_until(
+                        CLI, timeout=1)
                     if CLI in str7Output:
                         return get_result()
                     elif CLI_Conflict in str7Output:
@@ -322,14 +329,13 @@ class HAAPConn(object):
         #         print('Please Check Telnet Connection to "{}" \n\n'.format(
         #             self._host))
 
-    def Close(self):
-        if self.Connection:
-            self.Connection.close()
-
-    connection = property(
-        get_connection_status, doc="Get HAAPConn instance's connection")
+#         暂未使用
+#     def close(self):
+#         if self.Connection:
+#             self.Connection.close()
 
 
 if __name__ == '__main__':
 
     pass
+
