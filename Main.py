@@ -6,6 +6,7 @@ import SANSW as sw
 import HAAP as haap
 import Sundry as s
 import Monitor as m
+import consts as cs
 
 try:
     import configparser as cp
@@ -18,9 +19,6 @@ import GetConfig as gc
 setting = gc.Setting()
 strCFGFolder = setting.folder_cfgbackup()
 strTraceFolder = setting.folder_trace()
-
-
-Version = 'v0.0.1'
 
 # <<<Get Config Field>>>
 
@@ -94,7 +92,7 @@ strGTHelp = '''
 #     at <HAAP_IP> [Trace_Level] | all [Trace_Level]
 #         HAAP_IP        - for defined HA-AP Engine
 #         all            - for All HA-AP Engines Defined in Conf.ini
-#             [Trace_Level]  - Option, Given or Defined        
+#             [Trace_Level]  - Option, Given or Defined
 # '''.format(strTraceFolder)
 
 strATHelp = '''
@@ -148,9 +146,9 @@ strVersionHelp = '''
 
 
 def main():
-    if len(sys.argv) == 1:#用户输入参数是否是本身，如果是
-        print(strHelp)#打印帮助
-    #OK
+    if len(sys.argv) == 1:  # 用户输入参数是否是本身，如果是
+        print(strHelp)  # 打印帮助
+    # OK
     elif sys.argv[1] == 'ptes':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 3:
@@ -162,25 +160,26 @@ def main():
                 sw.print_porterror_formated(sys.argv[2])
             else:
                 print('Please provide correct switch ip...')
-    #OK
-    elif sys.argv[1] == 'ptcl':#判断执行参数是否为ptcl
-        num_argv = len(sys.argv)  #获取参数的个数
-        if num_argv == 2 or num_argv > 4:#如果是2个或者大于4个
-            print(strPTCLHelp) #打印提示信息
-        elif sys.argv[2] == 'all': #如果是3个参数是 all
-            sw.clear_all() #调用清除所有交换机端口错误函数
-        elif s.is_IP(sys.argv[2]):#如果第3个参数是ip的话,判断是不是ip
-            if num_argv == 4:   #判断是否有第4个参数，如果有
-                #if _isPort(sys.argv[3]):   错误
-                if s.is_port(sys.argv[3]):   #在判断第4个参数是否是正确的端口      
-                    sw.clear_one_port(sys.argv[2], sys.argv[3])#调用清除具体ip，端口错误
+    # OK
+    elif sys.argv[1] == 'ptcl':  # 判断执行参数是否为ptcl
+        num_argv = len(sys.argv)  # 获取参数的个数
+        if num_argv == 2 or num_argv > 4:  # 如果是2个或者大于4个
+            print(strPTCLHelp)  # 打印提示信息
+        elif sys.argv[2] == 'all':  # 如果是3个参数是 all
+            sw.clear_all()  # 调用清除所有交换机端口错误函数
+        elif s.is_IP(sys.argv[2]):  # 如果第3个参数是ip的话,判断是不是ip
+            if num_argv == 4:  # 判断是否有第4个参数，如果有
+                # if _isPort(sys.argv[3]):   错误
+                if s.is_port(sys.argv[3]):  # 在判断第4个参数是否是正确的端口
+                    # 调用清除具体ip，端口错误
+                    sw.clear_one_port(sys.argv[2], sys.argv[3])
                 else:
-                    print('Please provide correct port number...') #请提供正确端口号
+                    print('Please provide correct port number...')  # 请提供正确端口号
             else:
-                print(strPTCLHelp) #打印提示
+                print(strPTCLHelp)  # 打印提示
         else:
-            print('Please provide correct switch ip...')#请提供正确的交换机ip
-    #OK
+            print('Please provide correct switch ip...')  # 请提供正确的交换机ip
+    # OK
     elif sys.argv[1] == 'sws':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 3:
@@ -193,7 +192,7 @@ def main():
             else:
                 print('Please provide correct switch ip...')
 
-    #OK
+    # OK
     elif sys.argv[1] == 'bc':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 3:
@@ -207,8 +206,8 @@ def main():
                 print('Please provide correct engine ip...')
 
     # get engines' trace files under TraceFolder based on Trace levels
-    #trace、primary、seaond
-    #OK git Trace   NOT have Primary
+    # trace、primary、seaond
+    # OK git Trace   NOT have Primary
     elif sys.argv[1] == 'gt':
         num_argv = len(sys.argv)
         if num_argv > 3:
@@ -258,7 +257,7 @@ def main():
     #             haap.analyse_trace(sys.argv[2], 0)
     #     else:
     #         print('Please Provide Correct Engine IP...')
-    #OK python Main.py at Trace\2019-00-00
+    # OK python Main.py at Trace\2019-00-00
     elif sys.argv[1] == 'at':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 3:
@@ -268,7 +267,7 @@ def main():
                 s.TraceAnalyse(sys.argv[2]).run()
             else:
                 print('Please provide correct trace folder')
-    #OK  python Main.py ec 10.203.1.223 cmd.txt
+    # OK  python Main.py ec 10.203.1.223 cmd.txt
     elif sys.argv[1] == 'ec':
         if len(sys.argv) != 4:
             print(strECHelp)
@@ -280,7 +279,7 @@ def main():
             if not s.is_file(command_file):
                 print('File not exists. please provide correct file...')
             haap.execute_multi_commands(ip, command_file)
-    #OK  python Main.py fw 10.203.1.223 FW15.9.7.7_OR.bin
+    # OK  python Main.py fw 10.203.1.223 FW15.9.7.7_OR.bin
     elif sys.argv[1] == 'fw':
         if len(sys.argv) != 4:
             print(strFWHelp)
@@ -292,7 +291,7 @@ def main():
             if not s.is_file(fw_file):
                 print('File not exists. please provide correct file...')
             haap.change_firmware(ip, fw_file)
-    #OK-
+    # OK-
     elif sys.argv[1] == 'sts':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 3:
@@ -304,7 +303,7 @@ def main():
                 haap.show_stauts(sys.argv[2])
             else:
                 print('Please provide correct engine ip...')
-    #OK
+    # OK
     elif sys.argv[1] == 'st':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 3:
@@ -316,7 +315,7 @@ def main():
                 haap.set_time(sys.argv[2])
             else:
                 print('Please provide correct engine ip...')
-    #OK    
+    # OK
     elif sys.argv[1] == 'stm':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 3:
@@ -328,7 +327,7 @@ def main():
                 haap.show_time(sys.argv[2])
             else:
                 print('Please provide correct engine ip...')
-    #OK
+    # OK
     elif sys.argv[1] == 'pc':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 4:
@@ -356,7 +355,7 @@ def main():
                         print('Please provide correct SAN switch ip...')
             else:
                 print(strPCHelp)
-    #OK
+    # OK
     elif sys.argv[1] == 'mnt':
         num_argv = len(sys.argv)
         if num_argv == 2 or num_argv > 4:
@@ -367,13 +366,12 @@ def main():
             m.monitor_db_4_thread()
         else:
             print('rt(realtime) or db(datarase)')
-            
+
     elif sys.argv[1] == 'v':
-        print("VersaTEL G1",Version)
+        print("VersaTEL G1", cs.VERSION)
     else:
         print(strHelp)
 
-    
 
 if __name__ == '__main__':
     main()
