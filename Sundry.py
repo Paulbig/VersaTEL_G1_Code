@@ -96,9 +96,9 @@ def is_IP(strIP):
     else:
         return False
 
-
-def is_IP_list(lstIP):
-    return all(map(is_IP, lstIP))
+# 暂未使用
+# def is_IP_list(lstIP):
+#     return all(map(is_IP, lstIP))
 
 
 def is_file(strFileName):
@@ -107,7 +107,7 @@ def is_file(strFileName):
     else:
         return False
 
-    
+
 def is_folder(strDirName):
     if os.path.isdir(strDirName):
         return True
@@ -120,8 +120,7 @@ def is_port(intPortNum):
         return True
     if type(intPortNum) == str:
         if intPortNum.isdigit():
-            if type(eval(intPortNum)) == int:
-                return True
+            return True
     return False
 
 
@@ -137,7 +136,7 @@ def ShowErr(*argvs):
 |    Error message: {:<55}|
 |        {:<66}|
 ----------------------------------------------------------------------------\
-'''.format(argvs[2], err_msg=(argvs[3] if argvs[3] else ''))))
+'''.format(argvs[2], argvs[3] if argvs[3] else '')))
     elif error_level == 2:
         pass
     elif error_level == 3:
@@ -150,7 +149,7 @@ def ShowErr(*argvs):
 |        {:<66}|
 ----------------------------------------------------------------------------\
 
-'''.format(argvs[0], argvs[1], argvs[2], err_msg=(argvs[3] if argvs[3] else ''))))
+'''.format(argvs[0], argvs[1], argvs[2], argvs[3] if argvs[3] else '')))
 
 
 def GotoFolder(strFolder):
@@ -184,7 +183,7 @@ class Timing(object):
     def add_interval(self, job, intSec):
         trigger = IntervalTrigger(seconds=intSec)
         self.scdl.add_job(job, trigger)
-    
+
     def add_cycle(self, job, args):
         cycle = args[0]
         day = args[1]
@@ -196,13 +195,13 @@ class Timing(object):
         elif cycle == 'day':
             trigger = CronTrigger(hour=hours, minute=minutes)
             self.scdl.add_job(job, trigger)
-    
+
     def add_once(self, job, rdate):
         try:
             self.scdl.add_job(job, 'date', run_date=rdate, max_instances=6)
         except ValueError as E:
             self.scdl.add_job(job, 'date')
-        
+
     def stt(self):
         self.scdl.start()
 
@@ -236,6 +235,7 @@ class TimeNow(object):
     def wd(self):  # Day of the Week
         return (self._now[6])
 
+
 class TraceAnalyse():
     def __init__(self, strTraceFolder):
         self.target = strTraceFolder
@@ -256,9 +256,9 @@ class TraceAnalyse():
             return strTrace.strip().replace('\ufeff', '')
         except Exception as E:
             print('Open file "{}" failed with error:\n\t"{}"'.format(
-                strFileName, E)) 
+                strFileName, E))
 
-    def _write_to_excel(self, objExcel,error_type,tpl_error):
+    def _write_to_excel(self, objExcel, error_type, tpl_error):
         objSheet = objExcel.add_sheet(error_type)
         for x in range(len(tpl_error)):
             for y in range(len(tpl_error[x])):
@@ -268,13 +268,12 @@ class TraceAnalyse():
 
     def _generate_excel_file_name(self, log_file_name):
         if log_file_name.endswith('.log'):
-            file_name = log_file_name.replace('.log','.xls')
+            file_name = log_file_name.replace('.log', '.xls')
         elif log_file_name.endswith('.txt'):
-            file_name = log_file_name.replace('.txt','.xls')
+            file_name = log_file_name.replace('.txt', '.xls')
         else:
             file_name = '%s.xls' % log_file_name
         return 'TraceAnalyze_%s' % file_name
-
 
     def _find_error(self, strFileName):
         strTrace = self._read_file(strFileName)
@@ -284,8 +283,9 @@ class TraceAnalyse():
             re_error = re.compile(eval(self.regular_dict[error_type]))
             tpl_error = re_error.findall(strTrace)
             if len(tpl_error) > 0:
-                print('*** %-3.d times of %-12s found...' % (len(tpl_error)+1,error_type))
-                self._write_to_excel(objExcel,error_type,tpl_error)
+                print('*** %-3.d times of %-12s found...' %
+                      (len(tpl_error)+1, error_type))
+                self._write_to_excel(objExcel, error_type, tpl_error)
                 save_flag += 1
         if save_flag:
             xls_file_name = self._generate_excel_file_name(strFileName)
@@ -298,7 +298,7 @@ class TraceAnalyse():
         for trace_file in lstTraceFiles:
             print('\nStart to analysing %s ...' % trace_file)
             self._find_error(trace_file)
-            
+
     def run(self):
         strOriginalFolder = os.getcwd()
         try:
@@ -308,7 +308,5 @@ class TraceAnalyse():
             os.chdir(strOriginalFolder)
 
 
-
 if __name__ == '__main__':
     pass
-

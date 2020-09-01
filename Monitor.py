@@ -1,12 +1,14 @@
 # coding:utf-8
 from __future__ import print_function
 import time
+import sys
 from flask import Flask, render_template, request
 from gevent.pywsgi import WSGIServer
 from threading import Thread
 import time
 import operator
 import datetime
+import consts as cs
 import SANSW as sw
 import HAAP as haap
 import Sundry as s
@@ -64,35 +66,25 @@ def monitor_rt_1_thread():
 
 
 def monitor_db_4_thread():
-    t1 = Thread(target=start_web, args=('db',))
-    t2 = Thread(target=haap_interval_check, args=(interval_haap_update,))
-    t3 = Thread(target=sansw_interval_check, args=(interval_sansw_update,))
-    t4 = Thread(target=warning_interval_check, args=(interval_warning_check,))
-    t5 = Thread(target=Monitoring_heart_check, args=(cycle_msg_args,))
-    t1.setDaemon(True)
-    t2.setDaemon(True)
-    t3.setDaemon(True)
-    t4.setDaemon(True)
-    t5.setDaemon(True)
-    
-    t1.start()
-    t2.start()
-    t3.start()
-    t4.start()
-    t5.start()
-    try:
-        while t5.isAlive():
-            pass
-        while t4.isAlive():
-            pass
-        while t3.isAlive():
-            pass
-        while t2.isAlive():
-            pass
-        while t1.isAlive():
-            pass
-    except KeyboardInterrupt:
-        stopping_web(3)
+    target = [start_web, haap_interval_check, sansw_interval_check,
+              warning_interval_check, Monitoring_heart_check]
+    args = [('db',), (interval_haap_update,), (interval_sansw_update,),
+            (interval_warning_check,), (cycle_msg_args,)]
+    thread = []
+    for target, args in zip(target, args):
+        t = Thread(target=target, args=args)
+        t.setDaemon(True)
+        t.start()
+        thread.append(t)
+
+    while True:
+        for thread_value in thread:
+            try:
+                while thread_value.isAlive():
+                    break
+            except KeyboardInterrupt:
+                stopping_web(3)
+                sys.exit()
 
 
 def start_web(mode):
@@ -112,7 +104,11 @@ tlu = Time Last Update
 
         if mode == 'rt':
             StatusHAAP = haap_rt_info_to_show()
-            StatusSANSW = sansw_rt_info_to_show()
+            if sw_enable_status == 'yes':
+                StatusSANSW = sansw_rt_info_to_show()
+            else:
+                StatusSANSW = 0
+
             if StatusHAAP:
                 StatusHAAP.sort(key=operator.itemgetter(0))
                 tlu_haap = s.time_now_to_show()
@@ -166,7 +162,8 @@ tlu = Time Last Update
                                status_sansw=StatusSANSW,
                                status_warning=status_warning,
                                interval_web_refresh=interval_web_refresh,
-                               sw_enable_status=sw_enable_status
+                               sw_enable_status=sw_enable_status,
+                               VERSION=cs.VERSION
                                )
 
     @app.route("/warning/")
